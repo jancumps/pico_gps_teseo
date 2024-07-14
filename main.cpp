@@ -49,7 +49,8 @@ teseo::teseo gps;
 
 void init () {
     stdio_init_all();
-    // I2C is "open drain", pull ups to keep signal high when no data is being sent (not. board has pullups)
+    // I2C is "open drain", pull ups to keep signal high when no data is being sent 
+    // (not needed. board has pullups)
     i2c_init(I2C_PORT, I2C_BAUD);
     gpio_set_function(I2C_SDA, GPIO_FUNC_I2C);
     gpio_set_function(I2C_SCL, GPIO_FUNC_I2C);
