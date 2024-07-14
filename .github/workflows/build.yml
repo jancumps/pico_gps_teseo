@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - 'develop'
-      - 'master'
+      - 'main'
 
 jobs:
   build:
@@ -32,7 +32,7 @@ jobs:
         run: git submodule update --init
       - name: Install dependencies
         run: |
-          sudo apt-get cmake
+          sudo apt-get install cmake
           sudo apt-get install gcc-arm-embedded
       - name: Build Project
         working-directory: ${{github.workspace}}/pico_gps_teseo_i2c
