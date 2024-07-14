@@ -18,9 +18,7 @@ add_executable(${CMAKE_PROJECT_NAME}
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME} 
-        pico_stdlib
-        hardware_gpio
-        hardware_i2c
+        pico_stdlib hardware_gpio hardware_i2c
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC 
