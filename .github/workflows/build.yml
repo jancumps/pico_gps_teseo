@@ -6,9 +6,8 @@ on:
       - 'develop'
       - 'main'
   pull_request:
-    branches: 
-      - 'develop'
-      - 'main'    
+    types: [opened, synchronize, reopened, closed]
+
 jobs:
   build:
     runs-on: ubuntu-latest
