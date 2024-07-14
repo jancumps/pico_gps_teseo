@@ -35,6 +35,7 @@ jobs:
         with:
           htmloutput: .
           ghpagesbranch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
