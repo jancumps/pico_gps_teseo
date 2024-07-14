@@ -41,7 +41,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -G "Unix Makefiles" -DPICO_SDK_PATH=../../${{github.workspace}}/pico-sdk -DCMAKE_BUILD_TYPE=Debug -DPICO_BOARD=pico_w
+          cmake .. -G "Unix Makefiles" -DPICO_SDK_PATH=${{github.workspace}}/pico-sdk -DCMAKE_BUILD_TYPE=Debug -DPICO_BOARD=pico_w
           cmake --build .
       - name: Build Native
         working-directory: ${{github.workspace}}/pico_gps_teseo_i2c
