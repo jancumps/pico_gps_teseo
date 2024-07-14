@@ -1,4 +1,4 @@
-name: Build on macOS
+name: Build on ubuntu against pico-sdk develop
 on:
   workflow_dispatch:
   push:
@@ -32,8 +32,8 @@ jobs:
         run: git submodule update --init
       - name: Install dependencies
         run: |
-          brew install cmake
-          brew install --cask gcc-arm-embedded
+          sudo apt-get cmake
+          sudo apt-get install gcc-arm-embedded
       - name: Build Project
         working-directory: ${{github.workspace}}/pico_gps_teseo_i2c
         # bash required otherwise this mysteriously (no error) fails at "Generating cyw43_bus_pio_spi.pio.h"
