@@ -3,12 +3,7 @@ name: Deploy Doxygen with GitHub Pages dependencies preinstalled
 
 on:
   
-  #push:
-  #  branches:
-  #    - 'develop'
-  #    - 'main'
-  pull_request:
-    types: [opened, reopened]
+  push:
     branches:
       - 'main'
 
