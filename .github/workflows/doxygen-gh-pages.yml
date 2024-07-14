@@ -34,6 +34,7 @@ jobs:
         uses: langroodi/doxygenize@v1.7.0
         with:
           htmloutput: .
+          ghpagesbranch: master
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
