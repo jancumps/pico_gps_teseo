@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: ubuntu-latest
     steps:
       - name: Clean workspace
         run: |
@@ -16,12 +16,12 @@ jobs:
           rm -rf "${{ github.workspace }}"
           mkdir -p "${{ github.workspace }}"
       - name: Checkout pico_gps_teseo_i2c
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: pico_gps_teseo_i2c
 
       - name: Checkout pico-sdk/develop
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: raspberrypi/pico-sdk
           ref: develop
