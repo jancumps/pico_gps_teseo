@@ -38,6 +38,7 @@ jobs:
           sudo tar xf gcc-arm-none-eabi.tar.bz2 --strip-components=1 -C /opt/gcc-arm-none-eabi
           echo 'export PATH=$PATH:/opt/gcc-arm-none-eabi/bin' | sudo tee -a /etc/profile.d/gcc-arm-none-eabi.sh
           export PATH=$PATH:/opt/gcc-arm-none-eabi/bin
+          export PICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin
           source /etc/profile
           arm-none-eabi-gcc --version
           #sudo apt install gcc-arm-none-eabi
