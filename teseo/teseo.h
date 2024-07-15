@@ -41,6 +41,7 @@ public:
     inline Callback<void, const std::string&>& getWriteCallback() {
         return writer;
     }
+
     //! expose the callback manager for reading from Teseo
     /*!
       The developer has to register the logic for reading from the device.  
@@ -50,6 +51,7 @@ public:
     inline Callback<void, std::string&>& getReadCallback() {
         return reader;
     }
+
     //! expose the callback manager for resetting the Teseo
     /*!
       The developer has to register the logic that resets the device. It is optional. See the init() documentation.  
@@ -79,8 +81,9 @@ public:
 
       Write command to the Teseo by invoking the provided callback handler.  
       Precondition (asserted): the handler has to be set by the developer before first use.     
-    */    
+    */
     void write(const std::string& s);
+    
     //! read data from the Teseo
     /*!
       \param s std::string reference. 
