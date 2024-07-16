@@ -57,4 +57,12 @@ void teseo::read(std::string& s) {
     reader.call(s);
 }
 
+void teseo::ask_gpgll(std::string& s) {
+    write(gpgll_msg);
+    read(s);
+    // TODO validate
+    // assert( s.length() == 0 || std::count(s.begin(), s.end(), '$') == 2); //if I get a reply, is it valid?
+
+}
+
 } // namespace teseo

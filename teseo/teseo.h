@@ -95,11 +95,11 @@ public:
 
     //! send GPPLL request to the Teseo
     /*!
-      Send request for GPLL data to the Teseo. Use read() to retrieve the repy.
+      \param s std::string reference. 
+
+      Send request for GPLL data to the Teseo. Retrieve the repy.
     */    
-    void ask_gpgll() {
-        write(gpgll_msg);
-    }
+    void ask_gpgll(std::string& s);
 
 private:
 
