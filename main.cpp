@@ -48,7 +48,7 @@
 // recover must be more than 3 seconds
 #define RESET_RECOVER_MS (4000)
 
-uint8_t buf[I2C_BUFFSIZE]; // read buffer, intentionally not initialised
+uint8_t i2c_buf[I2C_BUFFSIZE]; // read buffer, intentionally not initialised
 
 
 teseo::teseo gps;
@@ -74,17 +74,16 @@ void write(const std::string& s) {
 }
 
 void read(std::string& s) {
-    memset (buf, 0, I2C_BUFFSIZE);
-    for (buf[I2C_BUFFSIZE-1] = 0; buf[I2C_BUFFSIZE-1] != 0xff;) { // in line with AN5203
+    memset (i2c_buf, 0, I2C_BUFFSIZE);  // initialise buffer before reading
+    for (i2c_buf[I2C_BUFFSIZE-1] = 0; i2c_buf[I2C_BUFFSIZE-1] != 0xff;) { // in line with AN5203
       // read in one go as register addresses auto-increment
-      i2c_read_blocking(i2c_default, I2C_ADDR, buf, I2C_BUFFSIZE, false);
+      i2c_read_blocking(i2c_default, I2C_ADDR, i2c_buf, I2C_BUFFSIZE, false);
       // find first non 0xFF. That's the start
-      auto iter_begin =  std::find(std::begin(buf), std::end(buf), '$');
+      auto iter_begin =  std::find(std::begin(i2c_buf), std::end(i2c_buf), '$');
       // find first 0xFF. That's the end
-      auto iter_end =  std::find(iter_begin, std::end(buf), 0xff);
+      auto iter_end =  std::find(iter_begin, std::end(i2c_buf), 0xff);
       s = std::string(iter_begin, iter_end);
     }
-
     return;
 }
 
@@ -120,7 +119,9 @@ int main() {
 
     while (true) {
         std::string reply; // 
-        gps.ask_gpgll(reply);
+        if (!gps.ask_gpgll(reply)) {
+            printf("----- invalid reply -----\n\r"); // invalid
+        }
         printf(reply.c_str());
         sleep_ms(1000);
     }

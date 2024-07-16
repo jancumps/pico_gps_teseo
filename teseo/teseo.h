@@ -93,13 +93,14 @@ public:
     */    
     void read(std::string& s);
 
-    //! send GPPLL request to the Teseo
+    //! get GPGLL request to the Teseo and read reply
     /*!
       \param s std::string reference. 
+      \returns bool true if valid reply
 
       Send request for GPLL data to the Teseo. Retrieve the repy.
     */    
-    void ask_gpgll(std::string& s);
+    bool ask_gpgll(std::string& s);
 
 private:
 
