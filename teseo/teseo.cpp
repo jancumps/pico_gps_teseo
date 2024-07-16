@@ -57,4 +57,11 @@ void teseo::read(std::string& s) {
     reader.call(s);
 }
 
+bool teseo::ask_gpgll(std::string& s) {
+    write(gpgll_msg);
+    read(s);
+    return s.starts_with("$GPGLL,");
+
+}
+
 } // namespace teseo
