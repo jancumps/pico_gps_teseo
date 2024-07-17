@@ -3,7 +3,15 @@
 
 #include <string>
 #include "callbackmanager.h"
+// std::pair
+#include <utility> 
+
 namespace teseo {
+
+/**
+ * A std::pair to hold a NMEA command and its reply signature validation string
+*/
+typedef const std::pair<const std::string, const std::string> nmea_rr;
 
 //! Driver class for ST Teseo IC.
 /*!
@@ -93,19 +101,44 @@ public:
     */    
     void read(std::string& s);
 
+    //! send NMEA request to the Teseo and return reply
+    /*!
+      \param cmd const nmea_rr reference. 
+      \param s std::string reference. 
+      \param retries int. Default: 1.
+      \returns bool true if valid reply
+
+      Send NMEA request to the Teseo. Validate and Return the repy. Retry to get a valid reply
+    */    
+    bool ask_nmea(const nmea_rr& command, std::string& s, uint retries = 0);
+
     //! get GPGLL request to the Teseo and read reply
     /*!
       \param s std::string reference. 
+      \param retries int. Default: 1.
       \returns bool true if valid reply
 
-      Send request for GPLL data to the Teseo. Retrieve the repy.
+      Send request for GPGLL data to the Teseo. Retrieve the repy.
     */    
-    bool ask_gpgll(std::string& s);
+    bool ask_gpgll(std::string& s, uint retries = 0);
+
+
+    //! get GPRMC request to the Teseo and read reply
+    /*!
+      \param s std::string reference. 
+      \param retries int. Default: 1.
+      \returns bool true if valid reply
+
+      Send request for RPRMC data to the Teseo. Retrieve the repy.
+    */    
+    bool ask_gprmc(std::string& s, uint retries = 0);
 
 private:
 
     //! command to retrieve GPGLL data
-    static const std::string gpgll_msg;
+    static nmea_rr gpgll;
+    //! command to retrieve GPRMC data
+    static nmea_rr gprmc;
     //! callback manager for writing to the Teseo
     Callback<void, const std::string&> writer;
     //! callback manager for reading from the Teseo
