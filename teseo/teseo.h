@@ -103,7 +103,7 @@ public:
 
     //! send NMEA request to the Teseo and return reply
     /*!
-      \param cmd const nmea_rr reference. 
+      \param command const nmea_rr reference. 
       \param s std::string reference. 
       \param retries int. Default: 1.
       \returns bool true if valid reply
