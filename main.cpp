@@ -1,7 +1,7 @@
 // https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioning-sensor--stmicroelectronics.pdf
 
 
-/** @mainpage C++ library for ST Teseo GPS
+/*! @mainpage C++ library for ST Teseo GPS
 *
 * @authors Jan Cumps
 *
@@ -17,7 +17,6 @@
 * 2: [Dynamic GPS configuration (and some other things) ](https://community.element14.com/technologies/embedded/b/blog/posts/c-library-for-st-teseo-gps---pt-2-dynamic-gps-configuration-and-some-other-things)  
 *
 * example:
-* 
 * -# main.cpp
 */
 
@@ -75,7 +74,7 @@ void write(const std::string& s) {
 
 void read(std::string& s) {
     memset (i2c_buf, 0, I2C_BUFFSIZE);  // initialise buffer before reading
-    for (i2c_buf[I2C_BUFFSIZE-1] = 0; i2c_buf[I2C_BUFFSIZE-1] != 0xff;) { // in line with AN5203
+    for (i2c_buf[I2C_BUFFSIZE-1] = 0; i2c_buf[I2C_BUFFSIZE-1] != 0xff;) { // TODO in line with AN5203 remove after loooong testing
       // read in one go as register addresses auto-increment
       i2c_read_blocking(i2c_default, I2C_ADDR, i2c_buf, I2C_BUFFSIZE, false);
       // find first non 0xFF. That's the start
@@ -118,11 +117,14 @@ int main() {
     gps.init();
 
     while (true) {
-        std::string reply; // 
-        if (!gps.ask_gpgll(reply)) {
-            printf("----- invalid reply -----\n\r"); // invalid
-        }
+        std::string reply;
+
+        gps.ask_gpgll(reply, 4);
         printf(reply.c_str());
+
+        gps.ask_gprmc(reply, 4);
+        printf(reply.c_str());
+
         sleep_ms(1000);
     }
 }
