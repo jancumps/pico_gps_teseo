@@ -122,7 +122,6 @@ public:
     */    
     bool ask_gpgll(std::string& s, uint retries = 0);
 
-
     //! get GPRMC request to the Teseo and read reply
     /*!
       \param s std::string reference. 

@@ -27,7 +27,14 @@ https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioni
     // }
     // while((s.find("$PSTMGPSSUSPENDED*") == std::string::npos)); // command successful
 
-    // reset the i2c message list
+    // reset the UART message list
+    write("$PSTMCFGMSGL,0,1,0,0\n\r");
+    // do {
+    //     read(s);            
+    // }
+    // while((s.find("$PSTMCFGMSGLOK*") == std::string::npos)); // command successful
+
+    // reset the I2C message list
     write("$PSTMCFGMSGL,3,1,0,0\n\r");
     // do {
     //     read(s);            
