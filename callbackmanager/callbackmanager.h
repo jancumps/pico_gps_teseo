@@ -12,7 +12,13 @@
 
 template <typename R, typename... Args>
 // restrict to arithmetic data types for return value, or void
+// restrict to arithmetic data types for return value, or void
+#ifdef __GNUC__ // this requires a recent version of GCC.
+#if __GNUC_PREREQ(10,0)
   requires std::is_void<R>::value || std::is_arithmetic_v<R>
+#endif
+#endif
+
 class Callback {
 public:
 	Callback() : _callback(nullptr){}
