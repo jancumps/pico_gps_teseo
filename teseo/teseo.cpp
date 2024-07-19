@@ -52,8 +52,8 @@ https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioni
     do {
         read(s);            
     }
-    while((s.find("$PSTMGPSRESTART") == std::string::npos)); // command successful 
-
+    // TODO validate if I2C is OK with checking for empty
+    while(((s.length()) && s.find("$PSTMGPSRESTART") == std::string::npos)); // command successful
 }
 
 void teseo::write(const std::string& s) {

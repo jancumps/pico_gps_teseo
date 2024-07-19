@@ -18,7 +18,7 @@ add_executable(${CMAKE_PROJECT_NAME}
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME} 
-        pico_stdlib hardware_gpio hardware_i2c
+        pico_stdlib hardware_gpio hardware_i2c hardware_uart
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC 
@@ -26,6 +26,11 @@ ${CMAKE_CURRENT_SOURCE_DIR}/teseo
 ${CMAKE_CURRENT_SOURCE_DIR}/callbackmanager
 )
 
+# select the communication protocol to talk to the Teseo GPS
+#add_compile_definitions(GPS_OVER_UART)
+add_compile_definitions(GPS_OVER_I2C)
+
+# select the debug output (not used by the GPS interface)
 pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 1)
 pico_enable_stdio_usb(${CMAKE_PROJECT_NAME} 0)
 
