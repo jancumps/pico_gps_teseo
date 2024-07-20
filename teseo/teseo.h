@@ -25,6 +25,9 @@ typedef const std::pair<const std::string, const std::string> nmea_rr;
 class teseo {
 public:
 
+    //! constructor.
+    teseo() : single_line_parser(2) {}
+
     //! expose the callback manager for writing to Teseo.
     /*!
       The developer has to register the logic for writing to the device.  
@@ -83,6 +86,16 @@ public:
     */
     void init();
 
+    //! utility to parse a multiline Teseo reply into separate strings
+    /*!
+      \param s std::vector<qtd::string> reference will get the individual strings.  
+      \param s constant std::string reference string to be parsed.  
+      \returns count of strings parsed
+
+      split a big Teseo reply in its individual strings. The separator is "\r\n"
+    */
+    static uint parse_multiline_reply(std::vector<std::string> & strings, const std::string s) ;
+
     //! write command to the Teseo
     /*!
       \param s constant std::string reference.  
@@ -103,32 +116,51 @@ public:
 
     //! send NMEA request to the Teseo and return reply
     /*!
-      \param cmd const nmea_rr reference. 
-      \param s std::string reference. 
-      \param retries int. Default: 1.
+      \param command const nmea_rr reference holds the NMEA command.   
+      \param s std::string reference gets the reply.  
+      \param retries int. Default: 0.  
       \returns bool true if valid reply
 
       Send NMEA request to the Teseo. Validate and Return the repy. Retry to get a valid reply
     */    
     bool ask_nmea(const nmea_rr& command, std::string& s, uint retries = 0);
 
+    //! send NMEA request to the Teseo and return multi line reply
+    /*!
+      \param command const nmea_rr reference holds the NMEA command.   
+      \param strings std::vector<std::string> reference gets the replies.  
+      \returns uint count of replies
+
+      Send NMEA request that expects more than 1 reply to the Teseo. Validate and Return the repies. Retry to get a valid reply
+    */    
+    uint ask_nmea_multiple(const nmea_rr& command, std::vector<std::string>& strings);
+
     //! get GPGLL request to the Teseo and read reply
     /*!
-      \param s std::string reference. 
-      \param retries int. Default: 1.
-      \returns bool true if valid reply
+      \param s std::string reference gets the reply.  
+      \param retries int. Default: 0.  
+      \returns bool true if valid reply  
 
       Send request for GPGLL data to the Teseo. Retrieve the repy.
     */    
     bool ask_gpgll(std::string& s, uint retries = 0);
 
+    //! get GPGSV request to the Teseo and read reply
+    /*!
+      \param s std::string reference gets the reply. 
+      \returns int count of replies.
+
+      Send request for GPGSV data to the Teseo. Retrieve the repy.
+    */    
+    uint ask_gpgsv(std::vector<std::string>& strings);
+
     //! get GPRMC request to the Teseo and read reply
     /*!
-      \param s std::string reference. 
-      \param retries int. Default: 1.
-      \returns bool true if valid reply
+      \param s std::string reference gets the reply.  
+      \param retries int. Default: 0.  
+      \returns bool true if valid reply  
 
-      Send request for RPRMC data to the Teseo. Retrieve the repy.
+      Send request for GPRMC data to the Teseo. Retrieve the repy.
     */    
     bool ask_gprmc(std::string& s, uint retries = 0);
 
@@ -136,6 +168,8 @@ private:
 
     //! command to retrieve GPGLL data
     static nmea_rr gpgll;
+    //! command to retrieve GPGSV data
+    static nmea_rr gpgsv;
     //! command to retrieve GPRMC data
     static nmea_rr gprmc;
     //! callback manager for writing to the Teseo
@@ -144,6 +178,7 @@ private:
     Callback<void, std::string&> reader;
     //! callback manager for resetting the Teseo
     Callback<void> resetter;
+    std::vector<std::string> single_line_parser;
 
 };
 
