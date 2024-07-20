@@ -33,6 +33,14 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 
+// for the moment, the library restricts how many sattelites it entertains.
+// it influences the size of the read buffer (not a drama, this is a static buffer)
+// it also influences the size of the vector that will accept replies that are "per sattelite"
+// Currently, the code does not allow that the vector that holds these, grows (focus on embedded)
+// later, this can be changed to allow flex, if you accept the dynamic 
+// memory growth impact (acceptable for larger systems like PC, processors, ...)
+#define MAX_SATELITES 7
+
 // #define GPS_OVER_I2C  // you can set this in the CMake file
 // #define GPS_OVER_UART // you can set this in the CMake file
 
@@ -60,9 +68,12 @@
 #define UART_TX (4)
 #define UART_RX (5)
 // multiline replies take decent buffer size
-#define BUFFSIZE (1024)
+// calculate 70 characters per satelite, + 60 for the status line
+// many libraries limit the number of satelites to say 7
+#define BUFFSIZE (70 * MAX_SATELITES + 60)
 // multiline replies take a while at 9600 baud. 
-// 400 ms is not enough for commands like GPGSV
+// 400 ms is not enough for commands like GPGSV with 7 sattelites
+// the time is dependent on how many sattelites are actually in sight, not restricted by MAX_SATELITES
 #define UART_WAITFORREPLY_MS (500)
 // forward declaration
 void on_uart_rx();
@@ -83,7 +94,9 @@ volatile bool bWantChars; // explicitely uninitialised
 // recover must be more than 3 seconds
 #define RESET_RECOVER_MS (4000)
 
-#define NMEA_MAX_REPLIES (7)
+// calculate 70 characters per satelite, + 60 for the status line
+// many libraries limit the number of satelites to say 6
+#define NMEA_MAX_REPLIES (MAX_SATELITES)
 
 uint8_t buf[BUFFSIZE]; // read buffer, intentionally not initialised
 

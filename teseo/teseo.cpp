@@ -60,10 +60,10 @@ https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioni
 uint teseo::parse_multiline_reply(std::vector<std::string> & strings, const std::string s) {
     std::size_t maxelements = strings.size(); // at this moment, don't support growing the array (embedded)
     std::size_t string_index = 0;
-    std::size_t vector_index = 0;
+    std::size_t vector_index; // intentionally uninitialised
     std::string substring;
     
-    for(;;) {
+    for(vector_index = 0; vector_index < maxelements; vector_index++) {
         // TODO check for maxelements (assert will do for now)
         assert(vector_index < maxelements);
         std::size_t new_string_index = s.find("\r\n", string_index);
@@ -72,7 +72,6 @@ uint teseo::parse_multiline_reply(std::vector<std::string> & strings, const std:
             break;
         }
         strings[vector_index] = s.substr(string_index, (new_string_index + 2) - string_index); // include the separator
-        vector_index++;
         string_index = new_string_index + 2; // skip the separator
     }
     return vector_index;
