@@ -233,11 +233,12 @@ int main() {
         gps.ask_gpgll(reply, 4);
         printf(reply.c_str());
 
-        // TODO: ggsv returns multiple lines
+#ifdef GPS_OVER_UART // not tested with I2C
         gps.ask_gpgsv(replies);
         for (auto &s : replies) {
             printf(s.c_str());
         }
+#endif
 
         gps.ask_gprmc(reply, 4);
         printf(reply.c_str());
