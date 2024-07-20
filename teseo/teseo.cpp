@@ -63,7 +63,7 @@ uint teseo::parse_multiline_reply(std::vector<std::string> & strings, const std:
     std::size_t vector_index; // intentionally uninitialised
     std::string substring;
     
-    for(vector_index = 0; vector_index < maxelements; maxelements++) {
+    for(vector_index = 0; vector_index < maxelements; vector_index++) {
         // TODO check for maxelements (assert will do for now)
         assert(vector_index < maxelements);
         std::size_t new_string_index = s.find("\r\n", string_index);
