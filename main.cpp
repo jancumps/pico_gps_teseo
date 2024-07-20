@@ -59,8 +59,11 @@
 #define UART_BAUD (9600)
 #define UART_TX (4)
 #define UART_RX (5)
-#define BUFFSIZE (180)
-#define UART_WAITFORREPLY_MS (200)
+// multiline replies take decent buffer size
+#define BUFFSIZE (1024)
+// multiline replies take a while at 9600 baud. 
+// 400 ms is not enough for commands like GPGSV
+#define UART_WAITFORREPLY_MS (500)
 // forward declaration
 void on_uart_rx();
 int UART_IRQ = UART1_IRQ;
@@ -231,9 +234,9 @@ int main() {
         printf(reply.c_str());
 
         // TODO: ggsv returns multiple lines
-        gps.ask_gpgsv(replies, 4);
-        for (auto &reply : replies) {
-            printf(reply.c_str());
+        gps.ask_gpgsv(replies);
+        for (auto &s : replies) {
+            printf(s.c_str());
         }
 
         gps.ask_gprmc(reply, 4);

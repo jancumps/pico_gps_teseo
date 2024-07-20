@@ -57,6 +57,27 @@ https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioni
     while(((s.length()) && s.find("$PSTMGPSRESTART") == std::string::npos)); // command successful
 }
 
+uint teseo::parse_multiline_reply(std::vector<std::string> & strings, const std::string s) {
+    std::size_t maxelements = strings.size(); // at this moment, don't support growing the array (embedded)
+    std::size_t string_index = 0;
+    std::size_t vector_index = 0;
+    std::string substring;
+    
+    for(;;) {
+        // TODO check for maxelements (assert will do for now)
+        assert(vector_index < maxelements);
+        std::size_t new_string_index = s.find("\r\n", string_index);
+        if (new_string_index == std::string::npos) {// exhausted
+            // TODO maybe validate if the remaining string is the correct confirmation?
+            break;
+        }
+        strings[vector_index] = s.substr(string_index, (new_string_index + 2) - string_index); // include the separator
+        vector_index++;
+        string_index = new_string_index + 2; // skip the separator
+    }
+    return vector_index;
+}
+
 void teseo::write(const std::string& s) {
     assert(writer.armed());
     writer.call(s);
@@ -78,24 +99,33 @@ bool teseo::ask_nmea(const nmea_rr& command, std::string& s, uint retries) {
             break;
         }
     }
+    retval = (parse_multiline_reply(single_line_parser, s) == 1);
+    s = single_line_parser[0];    
     return retval;
 }
 
-bool teseo::ask_nmea_multiple(const nmea_rr& command, std::vector<std::string>& strings, uint retries) {
-    return false; // TODO implement
+uint teseo::ask_nmea_multiple(const nmea_rr& command, std::vector<std::string>& strings) {
+#ifdef GPS_OVER_I2C
+    assert(false); "not tested with I2C yet"
+#endif
+    uint retval; // intentionally not initialised
+    std::string s;
+    write(command.first);
+    read(s);
+    retval = parse_multiline_reply(strings, s);
+    return retval;
 }
 
 bool teseo::ask_gpgll(std::string& s, uint retries) {
     return ask_nmea(gpgll, s, retries);
 }
 
-// TODO: ggsv returns multiple lines
-bool teseo::ask_gpgsv(std::vector<std::string>& strings, uint retries) {
-    return ask_nmea_multiple(gprmc, strings, retries);
+uint teseo::ask_gpgsv(std::vector<std::string>& strings) {
+    return ask_nmea_multiple(gpgsv, strings);
 }
 
 bool teseo::ask_gprmc(std::string& s, uint retries) {
-    return ask_nmea(gpgsv, s, retries);
+    return ask_nmea(gprmc, s, retries);
 }
 
 } // namespace teseo
