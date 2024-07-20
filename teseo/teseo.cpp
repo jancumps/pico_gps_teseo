@@ -3,6 +3,7 @@
 namespace teseo {
 
 nmea_rr teseo::gpgll("$PSTMNMEAREQUEST,100000,0\n\r", "$GPGLL,");
+nmea_rr teseo::gpgsv("$PSTMNMEAREQUEST,80000,0\n\r", "$GPGSV,");
 nmea_rr teseo::gprmc("$PSTMNMEAREQUEST,40,0\n\r", "$GPRMC,");
 
 
@@ -80,12 +81,21 @@ bool teseo::ask_nmea(const nmea_rr& command, std::string& s, uint retries) {
     return retval;
 }
 
+bool teseo::ask_nmea_multiple(const nmea_rr& command, std::vector<std::string>& strings, uint retries) {
+    return false; // TODO implement
+}
+
 bool teseo::ask_gpgll(std::string& s, uint retries) {
     return ask_nmea(gpgll, s, retries);
 }
 
+// TODO: ggsv returns multiple lines
+bool teseo::ask_gpgsv(std::vector<std::string>& strings, uint retries) {
+    return ask_nmea_multiple(gprmc, strings, retries);
+}
+
 bool teseo::ask_gprmc(std::string& s, uint retries) {
-    return ask_nmea(gprmc, s, retries);
+    return ask_nmea(gpgsv, s, retries);
 }
 
 } // namespace teseo

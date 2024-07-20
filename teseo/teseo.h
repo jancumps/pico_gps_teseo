@@ -103,32 +103,53 @@ public:
 
     //! send NMEA request to the Teseo and return reply
     /*!
-      \param command const nmea_rr reference. 
-      \param s std::string reference. 
-      \param retries int. Default: 1.
+      \param command const nmea_rr reference holds the NMEA command.   
+      \param s std::string reference gets the reply.  
+      \param retries int. Default: 1.  
       \returns bool true if valid reply
 
       Send NMEA request to the Teseo. Validate and Return the repy. Retry to get a valid reply
     */    
     bool ask_nmea(const nmea_rr& command, std::string& s, uint retries = 0);
 
+    //! send NMEA request to the Teseo and return multi line reply
+    /*!
+      \param command const nmea_rr reference holds the NMEA command.   
+      \param strings std::vector<std::string> reference gets the replies.  
+      \param retries int. Default: 1.  
+      \returns bool true if valid reply
+
+      Send NMEA request that expects more than 1 reply to the Teseo. Validate and Return the repies. Retry to get a valid reply
+    */    
+    bool ask_nmea_multiple(const nmea_rr& command, std::vector<std::string>& strings, uint retries = 0);
+
     //! get GPGLL request to the Teseo and read reply
     /*!
-      \param s std::string reference. 
-      \param retries int. Default: 1.
-      \returns bool true if valid reply
+      \param s std::string reference gets the reply.  
+      \param retries int. Default: 1.  
+      \returns bool true if valid reply  
 
       Send request for GPGLL data to the Teseo. Retrieve the repy.
     */    
     bool ask_gpgll(std::string& s, uint retries = 0);
 
+    //! get GPGSV request to the Teseo and read reply
+    /*!
+      \param s std::string reference gets the reply. 
+      \param retries int. Default: 1.  
+      \returns bool true if valid reply  
+
+      Send request for GPGSV data to the Teseo. Retrieve the repy.
+    */    
+    bool ask_gpgsv(std::vector<std::string>& strings, uint retries = 0);
+
     //! get GPRMC request to the Teseo and read reply
     /*!
-      \param s std::string reference. 
-      \param retries int. Default: 1.
-      \returns bool true if valid reply
+      \param s std::string reference gets the reply.  
+      \param retries int. Default: 1.  
+      \returns bool true if valid reply  
 
-      Send request for RPRMC data to the Teseo. Retrieve the repy.
+      Send request for GPRMC data to the Teseo. Retrieve the repy.
     */    
     bool ask_gprmc(std::string& s, uint retries = 0);
 
@@ -136,6 +157,8 @@ private:
 
     //! command to retrieve GPGLL data
     static nmea_rr gpgll;
+    //! command to retrieve GPGSV data
+    static nmea_rr gpgsv;
     //! command to retrieve GPRMC data
     static nmea_rr gprmc;
     //! callback manager for writing to the Teseo

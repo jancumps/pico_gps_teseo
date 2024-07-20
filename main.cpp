@@ -80,6 +80,8 @@ volatile bool bWantChars; // explicitely uninitialised
 // recover must be more than 3 seconds
 #define RESET_RECOVER_MS (4000)
 
+#define NMEA_MAX_REPLIES (7)
+
 uint8_t buf[BUFFSIZE]; // read buffer, intentionally not initialised
 
 // forward declaration
@@ -87,6 +89,8 @@ void write(const std::string& s);
 void read(std::string& s);
 
 teseo::teseo gps;
+std::string reply;
+std::vector<std::string> replies(NMEA_MAX_REPLIES);
 
 void init () {
     stdio_init_all();
@@ -107,6 +111,8 @@ void init () {
     // set up and enable the interrupt handlers
     irq_set_exclusive_handler(UART_IRQ, on_uart_rx);
     irq_set_enabled(UART_IRQ, true);
+    // by default all UART interrupts off
+    uart_set_irq_enables(UART_PORT, false, false);
 #endif // GPS_OVER_UART
 
     
@@ -221,16 +227,19 @@ int main() {
     gps.init();
 
     while (true) {
-        std::string reply;
-
         gps.ask_gpgll(reply, 4);
         printf(reply.c_str());
+
+        // TODO: ggsv returns multiple lines
+        gps.ask_gpgsv(replies, 4);
+        for (auto &reply : replies) {
+            printf(reply.c_str());
+        }
 
         gps.ask_gprmc(reply, 4);
         printf(reply.c_str());
 
         printf("\r\n");
-
         sleep_ms(1000);
     }
 }
