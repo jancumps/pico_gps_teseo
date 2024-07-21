@@ -63,18 +63,28 @@ bool teseo::parse_multiline_reply(std::vector<std::string> & strings, const std:
     std::size_t vector_index; // intentionally uninitialised
     std::string substring;
     bool valid = false;
+
+    // TODO: current implementation will reply false if there are more answers than strings.size()
+    // it stores all valid replies up to that point. the remaining ones are discarded.
+    // In the future, I may add a parameter with the max count (default = 0: use strings.size()) 
+    // and rely on the user to provide a container that's big enough for that max count (can assert that)
     
     for(vector_index = 0; vector_index < maxelements; vector_index++) {
-        // TODO check for maxelements (assert will do for now)
-        assert(vector_index < maxelements);
         std::size_t new_string_index = s.find("\r\n", string_index);
         if (new_string_index == std::string::npos) {// exhausted. This should be the status string
+#ifdef __GNUC__ // this requires a recent version of GCC.
+#if __GNUC_PREREQ(10,0)
             valid = s.substr(string_index, s.length() - string_index).starts_with(command.second);
+#else
+            valid = (s.substr(string_index, s.length() - string_index).find(command.second)) != std::string::npos;
+#endif
+#endif
             break;
         }
         strings[vector_index] = s.substr(string_index, (new_string_index + 2) - string_index); // include the separator
         string_index = new_string_index + 2; // skip the separator
     }
+    assert(vector_index < maxelements);
     count = vector_index; // report the number of retrieved data lines.
     return valid;
 }
@@ -100,9 +110,6 @@ bool teseo::ask_nmea(const nmea_rr& command, std::string& s) {
 }
 
 bool teseo::ask_nmea_multiple(const nmea_rr& command, std::vector<std::string>& strings, uint& count) {
-#ifdef GPS_OVER_I2C
-//    assert(false); // "not tested with I2C yet"
-#endif
     uint retval; // intentionally not initialised
     std::string s;
     write(command.first);

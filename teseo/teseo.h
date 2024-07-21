@@ -5,6 +5,7 @@
 #include "callbackmanager.h"
 // std::pair
 #include <utility> 
+#include <vector>
 
 namespace teseo {
 
@@ -148,11 +149,11 @@ public:
 
     //! get GPGSV request to the Teseo and read reply
     /*!
-      \param s std::string reference gets the reply. 
-      \param count int count of replies. 
+      \param strings std::vector<std::string> reference gets the reply. 
+      \param count int reference gets count of replies. 
       \returns boold true if validated.
 
-      Send request for GPGSV data to the Teseo. Retrieve the repy.
+      Send request for GPGSV data to the Teseo. Retrieve the replies.
     */    
     bool ask_gpgsv(std::vector<std::string>& strings, uint& count);
 

@@ -106,11 +106,12 @@ void read(std::string& s);
 
 teseo::teseo gps;
 std::string reply;
-std::vector<std::string> replies(NMEA_MAX_REPLIES);
+std::vector<std::string> replies(NMEA_MAX_REPLIES); 
+// vector size is a suggestion. STL will allocate at least NMEA_MAX_REPLIES
 
 void init () {
     stdio_init_all();
-#ifdef GPS_OVER_I2C
+    #ifdef GPS_OVER_I2C
     // I2C is "open drain", pull ups to keep signal high when no data is being sent 
     // (not needed. board has pullups)
     i2c_init(I2C_PORT, I2C_BAUD);
@@ -251,9 +252,17 @@ int main() {
 
         valid = gps.ask_gpgsv(replies, count);
         printf("valid: %s. count: %u.\r\n", valid ? "yes" : "no", count);
-        for (auto &s : replies) {
-            printf(s.c_str());
-        }
+        // the vector may contain more string values than reported, because
+        // the library doesn't discard values above the read count (for efficiency).
+        // also, vector size may be larger than NMEA_MAX_REPLIES
+        // you can either use a for loop that runs through the valid entries only,
+        // or reset the unused slots yourself.
+        // I'm doing both here.
+        std::for_each(replies.begin() + count, replies.end(), [](auto &s) { 
+            s = std::string(); });
+        std::for_each(replies.begin(), replies.begin() + count, [](auto &s) { 
+            printf(s.c_str()); });
+
 
         valid = gps.ask_gprmc(reply);
         printf("valid: %s.\r\n", valid ? "yes" : "no");
