@@ -57,7 +57,7 @@ https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioni
     while(((s.length()) && s.find("$PSTMGPSRESTART") == std::string::npos)); // command successful
 }
 
-uint teseo::parse_multiline_reply(std::vector<std::string> & strings, const std::string s) {
+bool teseo::parse_multiline_reply(std::vector<std::string> & strings, const std::string s, uint& count) {
     std::size_t maxelements = strings.size(); // at this moment, don't support growing the array (embedded)
     std::size_t string_index = 0;
     std::size_t vector_index; // intentionally uninitialised
@@ -74,7 +74,8 @@ uint teseo::parse_multiline_reply(std::vector<std::string> & strings, const std:
         strings[vector_index] = s.substr(string_index, (new_string_index + 2) - string_index); // include the separator
         string_index = new_string_index + 2; // skip the separator
     }
-    return vector_index;
+    count = vector_index;
+    return vector_index > 0;
 }
 
 void teseo::write(const std::string& s) {
@@ -90,6 +91,7 @@ void teseo::read(std::string& s) {
 bool teseo::ask_nmea(const nmea_rr& command, std::string& s, uint retries) {
     bool retval; // intentionally not initialised
     uint tries; // intentionally not initialised
+    uint count;
     for (tries = 0; tries <= retries; tries++){
         write(command.first);
         read(s);
@@ -98,20 +100,20 @@ bool teseo::ask_nmea(const nmea_rr& command, std::string& s, uint retries) {
             break;
         }
     }
-    retval = (parse_multiline_reply(single_line_parser, s) == 1);
+    retval = parse_multiline_reply(single_line_parser, s, count);
     s = single_line_parser[0];    
     return retval;
 }
 
-uint teseo::ask_nmea_multiple(const nmea_rr& command, std::vector<std::string>& strings) {
+bool teseo::ask_nmea_multiple(const nmea_rr& command, std::vector<std::string>& strings, uint& count) {
 #ifdef GPS_OVER_I2C
-    assert(false); "not tested with I2C yet"
+//    assert(false); // "not tested with I2C yet"
 #endif
     uint retval; // intentionally not initialised
     std::string s;
     write(command.first);
     read(s);
-    retval = parse_multiline_reply(strings, s);
+    retval = parse_multiline_reply(strings, s, count);
     return retval;
 }
 
@@ -119,8 +121,8 @@ bool teseo::ask_gpgll(std::string& s, uint retries) {
     return ask_nmea(gpgll, s, retries);
 }
 
-uint teseo::ask_gpgsv(std::vector<std::string>& strings) {
-    return ask_nmea_multiple(gpgsv, strings);
+bool teseo::ask_gpgsv(std::vector<std::string>& strings, uint& count) {
+    return ask_nmea_multiple(gpgsv, strings, count);
 }
 
 bool teseo::ask_gprmc(std::string& s, uint retries) {

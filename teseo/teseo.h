@@ -88,13 +88,14 @@ public:
 
     //! utility to parse a multiline Teseo reply into separate strings
     /*!
-      \param s std::vector<qtd::string> reference will get the individual strings.  
+      \param strings std::vector<qtd::string> reference will get the individual strings.  
       \param s constant std::string reference string to be parsed.  
-      \returns count of strings parsed
+      \param count uint reference count of strings parsed.  
+      \returns  bool true if valid reply 
 
       split a big Teseo reply in its individual strings. The separator is "\r\n"
     */
-    static uint parse_multiline_reply(std::vector<std::string> & strings, const std::string s) ;
+    static bool parse_multiline_reply(std::vector<std::string> & strings, const std::string s, uint& count) ;
 
     //! write command to the Teseo
     /*!
@@ -128,12 +129,13 @@ public:
     //! send NMEA request to the Teseo and return multi line reply
     /*!
       \param command const nmea_rr reference holds the NMEA command.   
-      \param strings std::vector<std::string> reference gets the replies.  
-      \returns uint count of replies
+      \param strings std::vector<std::string> reference gets the replies. 
+      \param count uint reference count of strings parsed.  
+      \returns  bool true if valid reply 
 
       Send NMEA request that expects more than 1 reply to the Teseo. Validate and Return the repies. Retry to get a valid reply
     */    
-    uint ask_nmea_multiple(const nmea_rr& command, std::vector<std::string>& strings);
+    bool ask_nmea_multiple(const nmea_rr& command, std::vector<std::string>& strings, uint& count);
 
     //! get GPGLL request to the Teseo and read reply
     /*!
@@ -148,11 +150,12 @@ public:
     //! get GPGSV request to the Teseo and read reply
     /*!
       \param s std::string reference gets the reply. 
-      \returns int count of replies.
+      \param count int count of replies. 
+      \returns boold true if validated.
 
       Send request for GPGSV data to the Teseo. Retrieve the repy.
     */    
-    uint ask_gpgsv(std::vector<std::string>& strings);
+    bool ask_gpgsv(std::vector<std::string>& strings, uint& count);
 
     //! get GPRMC request to the Teseo and read reply
     /*!
