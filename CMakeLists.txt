@@ -27,8 +27,8 @@ ${CMAKE_CURRENT_SOURCE_DIR}/callbackmanager
 )
 
 # select the communication protocol to talk to the Teseo GPS
-add_compile_definitions(GPS_OVER_UART)
-#add_compile_definitions(GPS_OVER_I2C)
+#add_compile_definitions(GPS_OVER_UART)
+add_compile_definitions(GPS_OVER_I2C)
 
 # select the debug output (not used by the GPS interface)
 pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 1)
