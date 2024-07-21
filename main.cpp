@@ -54,7 +54,10 @@
 #define I2C_SDA (16)
 #define I2C_SCL (17)
 #define I2C_ADDR (0x3A)
-#define BUFFSIZE (180)
+// multiline replies take decent buffer size
+// calculate 70 characters per satelite, + 60 for the status line
+// many libraries limit the number of satelites to say 7
+#define BUFFSIZE (70 * MAX_SATELITES + 60)
 #endif
 
 #ifdef GPS_OVER_UART
@@ -241,17 +244,18 @@ int main() {
     https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioning-sensor--stmicroelectronics.pdf
     */
     gps.init();
+    uint count; // intentionally uninitialised
 
     while (true) {
         gps.ask_gpgll(reply, 4);
         printf(reply.c_str());
 
-#ifdef GPS_OVER_UART // not tested with I2C
-        gps.ask_gpgsv(replies);
+// #ifdef GPS_OVER_UART // not tested with I2C
+        gps.ask_gpgsv(replies, count);
         for (auto &s : replies) {
             printf(s.c_str());
         }
-#endif
+// #endif
 
         gps.ask_gprmc(reply, 4);
         printf(reply.c_str());
