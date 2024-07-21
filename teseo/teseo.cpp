@@ -2,9 +2,9 @@
 #include <cassert>
 namespace teseo {
 
-nmea_rr teseo::gpgll("$PSTMNMEAREQUEST,100000,0\n\r", "$GPGLL,");
-nmea_rr teseo::gpgsv("$PSTMNMEAREQUEST,80000,0\n\r", "$GPGSV,");
-nmea_rr teseo::gprmc("$PSTMNMEAREQUEST,40,0\n\r", "$GPRMC,");
+nmea_rr teseo::gpgll("$PSTMNMEAREQUEST,100000,0\n\r", "$PSTMNMEAREQUEST,100000,0");
+nmea_rr teseo::gpgsv("$PSTMNMEAREQUEST,80000,0\n\r", "$PSTMNMEAREQUEST,80000,0");
+nmea_rr teseo::gprmc("$PSTMNMEAREQUEST,40,0\n\r", "$PSTMNMEAREQUEST,40,0");
 
 
 /*
@@ -57,25 +57,26 @@ https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioni
     while(((s.length()) && s.find("$PSTMGPSRESTART") == std::string::npos)); // command successful
 }
 
-bool teseo::parse_multiline_reply(std::vector<std::string> & strings, const std::string s, uint& count) {
+bool teseo::parse_multiline_reply(std::vector<std::string> & strings, const std::string s, uint& count, const nmea_rr& command) {
     std::size_t maxelements = strings.size(); // at this moment, don't support growing the array (embedded)
     std::size_t string_index = 0;
     std::size_t vector_index; // intentionally uninitialised
     std::string substring;
+    bool valid = false;
     
     for(vector_index = 0; vector_index < maxelements; vector_index++) {
         // TODO check for maxelements (assert will do for now)
         assert(vector_index < maxelements);
         std::size_t new_string_index = s.find("\r\n", string_index);
-        if (new_string_index == std::string::npos) {// exhausted
-            // TODO maybe validate if the remaining string is the correct confirmation?
+        if (new_string_index == std::string::npos) {// exhausted. This should be the status string
+            valid = s.substr(string_index, s.length() - string_index).starts_with(command.second);
             break;
         }
         strings[vector_index] = s.substr(string_index, (new_string_index + 2) - string_index); // include the separator
         string_index = new_string_index + 2; // skip the separator
     }
-    count = vector_index;
-    return vector_index > 0;
+    count = vector_index; // report the number of retrieved data lines.
+    return valid;
 }
 
 void teseo::write(const std::string& s) {
@@ -88,19 +89,12 @@ void teseo::read(std::string& s) {
     reader.call(s);
 }
 
-bool teseo::ask_nmea(const nmea_rr& command, std::string& s, uint retries) {
+bool teseo::ask_nmea(const nmea_rr& command, std::string& s) {
     bool retval; // intentionally not initialised
-    uint tries; // intentionally not initialised
     uint count;
-    for (tries = 0; tries <= retries; tries++){
-        write(command.first);
-        read(s);
-        retval = s.starts_with(command.second);
-        if (retval) {
-            break;
-        }
-    }
-    retval = parse_multiline_reply(single_line_parser, s, count);
+    write(command.first);
+    read(s);
+    retval = parse_multiline_reply(single_line_parser, s, count, command);
     s = single_line_parser[0];    
     return retval;
 }
@@ -113,20 +107,20 @@ bool teseo::ask_nmea_multiple(const nmea_rr& command, std::vector<std::string>& 
     std::string s;
     write(command.first);
     read(s);
-    retval = parse_multiline_reply(strings, s, count);
+    retval = parse_multiline_reply(strings, s, count, command);
     return retval;
 }
 
-bool teseo::ask_gpgll(std::string& s, uint retries) {
-    return ask_nmea(gpgll, s, retries);
+bool teseo::ask_gpgll(std::string& s) {
+    return ask_nmea(gpgll, s);
 }
 
 bool teseo::ask_gpgsv(std::vector<std::string>& strings, uint& count) {
     return ask_nmea_multiple(gpgsv, strings, count);
 }
 
-bool teseo::ask_gprmc(std::string& s, uint retries) {
-    return ask_nmea(gprmc, s, retries);
+bool teseo::ask_gprmc(std::string& s) {
+    return ask_nmea(gprmc, s);
 }
 
 } // namespace teseo
