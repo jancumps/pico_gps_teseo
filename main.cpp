@@ -54,10 +54,7 @@
 #define I2C_SDA (16)
 #define I2C_SCL (17)
 #define I2C_ADDR (0x3A)
-// multiline replies take decent buffer size
-// calculate 70 characters per satelite, + 60 for the status line
-// many libraries limit the number of satelites to say 7
-#define BUFFSIZE (70 * MAX_SATELITES + 60)
+#define BUFFSIZE (1024)
 #endif
 
 #ifdef GPS_OVER_UART
@@ -245,19 +242,21 @@ int main() {
     */
     gps.init();
     uint count; // intentionally uninitialised
+    bool valid; // intentionally uninitialised
 
     while (true) {
-        gps.ask_gpgll(reply, 4);
+        valid = gps.ask_gpgll(reply);
+        printf("valid: %s.\r\n", valid ? "yes" : "no");
         printf(reply.c_str());
 
-// #ifdef GPS_OVER_UART // not tested with I2C
-        gps.ask_gpgsv(replies, count);
+        valid = gps.ask_gpgsv(replies, count);
+        printf("valid: %s. count: %u.\r\n", valid ? "yes" : "no", count);
         for (auto &s : replies) {
             printf(s.c_str());
         }
-// #endif
 
-        gps.ask_gprmc(reply, 4);
+        valid = gps.ask_gprmc(reply);
+        printf("valid: %s.\r\n", valid ? "yes" : "no");
         printf(reply.c_str());
 
         printf("\r\n");
