@@ -3,9 +3,10 @@
 namespace teseo {
 
 nmea_rr teseo::gpgll("$PSTMNMEAREQUEST,100000,0\n\r", "$PSTMNMEAREQUEST,100000,0");
-nmea_rr teseo::gpgsv("$PSTMNMEAREQUEST,80000,0\n\r", "$PSTMNMEAREQUEST,80000,0");
+nmea_rr teseo::gxgsv("$PSTMNMEAREQUEST,80000,0\n\r", "$PSTMNMEAREQUEST,80000,0");
+nmea_rr teseo::gxgsa("$PSTMNMEAREQUEST,4,0\n\r", "$PSTMNMEAREQUEST,4,0");
+nmea_rr teseo::gpgga("$PSTMNMEAREQUEST,2,0\n\r", "$PSTMNMEAREQUEST,2,0");
 nmea_rr teseo::gprmc("$PSTMNMEAREQUEST,40,0\n\r", "$PSTMNMEAREQUEST,40,0");
-
 
 /*
 when the teseo is preset for i2c according to AN5203,
@@ -122,12 +123,20 @@ bool teseo::ask_gpgll(std::string& s) {
     return ask_nmea(gpgll, s);
 }
 
-bool teseo::ask_gpgsv(std::vector<std::string>& strings, uint& count) {
-    return ask_nmea_multiple(gpgsv, strings, count);
+bool teseo::ask_gxgsv(std::vector<std::string>& strings, uint& count) {
+    return ask_nmea_multiple(gxgsv, strings, count);
+}
+
+bool teseo::ask_gxgsa(std::vector<std::string>& strings, uint& count) {
+    return ask_nmea_multiple(gxgsa, strings, count);
 }
 
 bool teseo::ask_gprmc(std::string& s) {
     return ask_nmea(gprmc, s);
+}
+
+bool teseo::ask_gpgga(std::string& s) {
+    return ask_nmea(gpgga, s);
 }
 
 } // namespace teseo

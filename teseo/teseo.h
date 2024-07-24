@@ -147,15 +147,25 @@ public:
     */    
     bool ask_gpgll(std::string& s);
 
-    //! get GPGSV request to the Teseo and read reply
+    //! get G*GSV request to the Teseo and read reply
     /*!
       \param strings std::vector<std::string> reference gets the reply. 
       \param count int reference gets count of replies. 
       \returns boold true if validated.
 
-      Send request for GPGSV data to the Teseo. Retrieve the replies.
+      Send request for G*GSV data to the Teseo. Retrieve the replies.
     */    
-    bool ask_gpgsv(std::vector<std::string>& strings, uint& count);
+    bool ask_gxgsv(std::vector<std::string>& strings, uint& count);
+
+    //! get G*GSA request to the Teseo and read reply
+    /*!
+      \param strings std::vector<std::string> reference gets the reply. 
+      \param count int reference gets count of replies. 
+      \returns boold true if validated.
+
+      Send request for G*GSA data to the Teseo. Retrieve the replies.
+    */    
+    bool ask_gxgsa(std::vector<std::string>& strings, uint& count);
 
     //! get GPRMC request to the Teseo and read reply
     /*!
@@ -166,12 +176,25 @@ public:
     */    
     bool ask_gprmc(std::string& s);
 
+    //! get GPGGA request to the Teseo and read reply
+    /*!
+      \param s std::string reference gets the reply.  
+      \returns bool true if valid reply  
+
+      Send request for GPGGA data to the Teseo. Retrieve the repy.
+    */    
+    bool ask_gpgga(std::string& s);
+
 private:
 
     //! command to retrieve GPGLL data
     static nmea_rr gpgll;
-    //! command to retrieve GPGSV data
-    static nmea_rr gpgsv;
+    //! command to retrieve G*GSV data
+    static nmea_rr gxgsv;
+    //! command to retrieve G*GSA data
+    static nmea_rr gxgsa;
+    //! command to retrieve GPGGA data
+    static nmea_rr gpgga;
     //! command to retrieve GPRMC data
     static nmea_rr gprmc;
     //! callback manager for writing to the Teseo
