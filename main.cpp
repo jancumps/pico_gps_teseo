@@ -282,6 +282,21 @@ int main() {
         printf("RMC valid: %s.\r\n", valid ? "yes" : "no");
         printf(reply.c_str());
 
+        // example: execute a custom command that returns one line
+        teseo::nmea_rr pstcmu("$PSTMNMEAREQUEST,800000,0\n\r", "$PSTMNMEAREQUEST,800000,0");
+        valid = gps.ask_nmea(pstcmu, reply);
+        printf("PSTMCPU valid: %s.\r\n", valid ? "yes" : "no");
+        printf(reply.c_str());
+
+        // example: execute a custom command that returns multiple lines (reusing the GSA command)
+        teseo::nmea_rr gsa("$PSTMNMEAREQUEST,4,0\n\r", "$PSTMNMEAREQUEST,4,0");
+        valid = gps.ask_nmea_multiple(gsa, replies, count);
+        printf("custom GSA valid: %s. count: %u.\r\n", valid ? "yes" : "no", count);
+        std::for_each(replies.begin() + count, replies.end(), [](auto &s) { 
+            s = std::string(); });
+        std::for_each(replies.begin(), replies.begin() + count, [](auto &s) { 
+            printf(s.c_str()); });
+
         printf("\r\n");
         sleep_ms(1000);
     }
