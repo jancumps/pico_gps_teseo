@@ -81,10 +81,10 @@ bool teseo::parse_multiline_reply(std::vector<std::string> & strings, const std:
 #endif
             break;
         }
+        assert(vector_index < maxelements);
         strings[vector_index] = s.substr(string_index, (new_string_index + 2) - string_index); // include the separator
         string_index = new_string_index + 2; // skip the separator
     }
-    assert(vector_index < maxelements);
     count = vector_index; // report the number of retrieved data lines.
     return valid;
 }
