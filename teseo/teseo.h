@@ -138,7 +138,7 @@ public:
     */    
     bool ask_nmea_multiple(const nmea_rr& command, std::vector<std::string>& strings, uint& count);
 
-    //! get GPGLL request to the Teseo and read reply
+    //! get GLL request to the Teseo and read reply
     /*!
       \param s std::string reference gets the reply.  
       \returns bool true if valid reply  
