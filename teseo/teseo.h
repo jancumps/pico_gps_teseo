@@ -143,60 +143,71 @@ public:
       \param s std::string reference gets the reply.  
       \returns bool true if valid reply  
 
-      Send request for GPGLL data to the Teseo. Retrieve the repy.
+      Send request for GLL data to the Teseo. Retrieve the repy.
     */    
-    bool ask_gpgll(std::string& s);
+    bool ask_gll(std::string& s);
 
-    //! get G*GSV request to the Teseo and read reply
+    //! get GSV request to the Teseo and read reply
     /*!
       \param strings std::vector<std::string> reference gets the reply. 
       \param count int reference gets count of replies. 
       \returns boold true if validated.
 
-      Send request for G*GSV data to the Teseo. Retrieve the replies.
+      Send request for GSV data to the Teseo. Retrieve the replies.
     */    
-    bool ask_gxgsv(std::vector<std::string>& strings, uint& count);
+    bool ask_gsv(std::vector<std::string>& strings, uint& count);
 
-    //! get G*GSA request to the Teseo and read reply
+    //! get GSA request to the Teseo and read reply
     /*!
       \param strings std::vector<std::string> reference gets the reply. 
       \param count int reference gets count of replies. 
       \returns boold true if validated.
 
-      Send request for G*GSA data to the Teseo. Retrieve the replies.
+      Send request for GSA data to the Teseo. Retrieve the replies.
     */    
-    bool ask_gxgsa(std::vector<std::string>& strings, uint& count);
+    bool ask_gsa(std::vector<std::string>& strings, uint& count);
 
-    //! get GPRMC request to the Teseo and read reply
+    //! get RMC request to the Teseo and read reply
     /*!
       \param s std::string reference gets the reply.  
       \returns bool true if valid reply  
 
-      Send request for GPRMC data to the Teseo. Retrieve the repy.
+      Send request for RMC data to the Teseo. Retrieve the repy.
     */    
-    bool ask_gprmc(std::string& s);
+    bool ask_rmc(std::string& s);
 
-    //! get GPGGA request to the Teseo and read reply
+    //! get GGA request to the Teseo and read reply
     /*!
       \param s std::string reference gets the reply.  
       \returns bool true if valid reply  
 
-      Send request for GPGGA data to the Teseo. Retrieve the repy.
+      Send request for GGA data to the Teseo. Retrieve the repy.
     */    
-    bool ask_gpgga(std::string& s);
+    bool ask_gga(std::string& s);
+
+    //! get VTG request to the Teseo and read reply
+    /*!
+      \param s std::string reference gets the reply.  
+      \returns bool true if valid reply  
+
+      Send request for VTG data to the Teseo. Retrieve the repy.
+    */    
+    bool ask_vtg(std::string& s);
 
 private:
 
-    //! command to retrieve GPGLL data
-    static nmea_rr gpgll;
-    //! command to retrieve G*GSV data
-    static nmea_rr gxgsv;
-    //! command to retrieve G*GSA data
-    static nmea_rr gxgsa;
-    //! command to retrieve GPGGA data
-    static nmea_rr gpgga;
-    //! command to retrieve GPRMC data
-    static nmea_rr gprmc;
+    //! command to retrieve GLL data
+    static nmea_rr gll;
+    //! command to retrieve GSV data
+    static nmea_rr gsv;
+    //! command to retrieve GSA data
+    static nmea_rr gsa;
+    //! command to retrieve GGA data
+    static nmea_rr gga;
+    //! command to retrieve RMC data
+    static nmea_rr rmc;
+    //! command to retrieve VTG data
+    static nmea_rr vtg;
     //! callback manager for writing to the Teseo
     Callback<void, const std::string&> writer;
     //! callback manager for reading from the Teseo

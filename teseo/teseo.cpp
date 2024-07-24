@@ -2,11 +2,12 @@
 #include <cassert>
 namespace teseo {
 
-nmea_rr teseo::gpgll("$PSTMNMEAREQUEST,100000,0\n\r", "$PSTMNMEAREQUEST,100000,0");
-nmea_rr teseo::gxgsv("$PSTMNMEAREQUEST,80000,0\n\r", "$PSTMNMEAREQUEST,80000,0");
-nmea_rr teseo::gxgsa("$PSTMNMEAREQUEST,4,0\n\r", "$PSTMNMEAREQUEST,4,0");
-nmea_rr teseo::gpgga("$PSTMNMEAREQUEST,2,0\n\r", "$PSTMNMEAREQUEST,2,0");
-nmea_rr teseo::gprmc("$PSTMNMEAREQUEST,40,0\n\r", "$PSTMNMEAREQUEST,40,0");
+nmea_rr teseo::gll("$PSTMNMEAREQUEST,100000,0\n\r", "$PSTMNMEAREQUEST,100000,0");
+nmea_rr teseo::gsv("$PSTMNMEAREQUEST,80000,0\n\r", "$PSTMNMEAREQUEST,80000,0");
+nmea_rr teseo::gsa("$PSTMNMEAREQUEST,4,0\n\r", "$PSTMNMEAREQUEST,4,0");
+nmea_rr teseo::gga("$PSTMNMEAREQUEST,2,0\n\r", "$PSTMNMEAREQUEST,2,0");
+nmea_rr teseo::rmc("$PSTMNMEAREQUEST,40,0\n\r", "$PSTMNMEAREQUEST,40,0");
+nmea_rr teseo::vtg("$PSTMNMEAREQUEST,10,0\n\r", "$PSTMNMEAREQUEST,10,0");
 
 /*
 when the teseo is preset for i2c according to AN5203,
@@ -119,24 +120,28 @@ bool teseo::ask_nmea_multiple(const nmea_rr& command, std::vector<std::string>& 
     return retval;
 }
 
-bool teseo::ask_gpgll(std::string& s) {
-    return ask_nmea(gpgll, s);
+bool teseo::ask_gll(std::string& s) {
+    return ask_nmea(gll, s);
 }
 
-bool teseo::ask_gxgsv(std::vector<std::string>& strings, uint& count) {
-    return ask_nmea_multiple(gxgsv, strings, count);
+bool teseo::ask_gsv(std::vector<std::string>& strings, uint& count) {
+    return ask_nmea_multiple(gsv, strings, count);
 }
 
-bool teseo::ask_gxgsa(std::vector<std::string>& strings, uint& count) {
-    return ask_nmea_multiple(gxgsa, strings, count);
+bool teseo::ask_gsa(std::vector<std::string>& strings, uint& count) {
+    return ask_nmea_multiple(gsa, strings, count);
 }
 
-bool teseo::ask_gprmc(std::string& s) {
-    return ask_nmea(gprmc, s);
+bool teseo::ask_gga(std::string& s) {
+    return ask_nmea(gga, s);
 }
 
-bool teseo::ask_gpgga(std::string& s) {
-    return ask_nmea(gpgga, s);
+bool teseo::ask_rmc(std::string& s) {
+    return ask_nmea(rmc, s);
+}
+
+bool teseo::ask_vtg(std::string& s) {
+    return ask_nmea(vtg, s);
 }
 
 } // namespace teseo

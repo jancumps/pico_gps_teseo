@@ -246,11 +246,11 @@ int main() {
     bool valid; // intentionally uninitialised
 
     while (true) {
-        valid = gps.ask_gpgll(reply);
+        valid = gps.ask_gll(reply);
         printf("GLL valid: %s.\r\n", valid ? "yes" : "no");
         printf(reply.c_str());
 
-        valid = gps.ask_gxgsv(replies, count);
+        valid = gps.ask_gsv(replies, count);
         printf("GSV valid: %s. count: %u.\r\n", valid ? "yes" : "no", count);
         // the vector may contain more string values than reported, because
         // the library doesn't discard values above the read count (for efficiency).
@@ -263,18 +263,22 @@ int main() {
         std::for_each(replies.begin(), replies.begin() + count, [](auto &s) { 
             printf(s.c_str()); });
 
-        valid = gps.ask_gxgsa(replies, count);
+        valid = gps.ask_gsa(replies, count);
         printf("GSA valid: %s. count: %u.\r\n", valid ? "yes" : "no", count);
         std::for_each(replies.begin() + count, replies.end(), [](auto &s) { 
             s = std::string(); });
         std::for_each(replies.begin(), replies.begin() + count, [](auto &s) { 
             printf(s.c_str()); });
 
-        valid = gps.ask_gpgga(reply);
+        valid = gps.ask_gga(reply);
         printf("GGA valid: %s.\r\n", valid ? "yes" : "no");
         printf(reply.c_str());
 
-        valid = gps.ask_gprmc(reply);
+        valid = gps.ask_vtg(reply);
+        printf("VTG valid: %s.\r\n", valid ? "yes" : "no");
+        printf(reply.c_str());
+
+        valid = gps.ask_rmc(reply);
         printf("RMC valid: %s.\r\n", valid ? "yes" : "no");
         printf(reply.c_str());
 
