@@ -252,21 +252,11 @@ int main() {
 
         valid = gps.ask_gsv(replies, count);
         printf("GSV valid: %s. count: %u.\r\n", valid ? "yes" : "no", count);
-        // the vector may contain more string values than reported, because
-        // the library doesn't discard values above the read count (for efficiency).
-        // also, vector size may be larger than NMEA_MAX_REPLIES
-        // you can either use a for loop that runs through the valid entries only,
-        // or reset the unused slots yourself.
-        // I'm doing both here.
-        std::for_each(replies.begin() + count, replies.end(), [](auto &s) { 
-            s = std::string(); });
         std::for_each(replies.begin(), replies.begin() + count, [](auto &s) { 
             printf(s.c_str()); });
 
         valid = gps.ask_gsa(replies, count);
         printf("GSA valid: %s. count: %u.\r\n", valid ? "yes" : "no", count);
-        std::for_each(replies.begin() + count, replies.end(), [](auto &s) { 
-            s = std::string(); });
         std::for_each(replies.begin(), replies.begin() + count, [](auto &s) { 
             printf(s.c_str()); });
 
@@ -292,8 +282,6 @@ int main() {
         teseo::nmea_rr gsa("$PSTMNMEAREQUEST,4,0\n\r", "$PSTMNMEAREQUEST,4,0");
         valid = gps.ask_nmea_multiple(gsa, replies, count);
         printf("custom GSA valid: %s. count: %u.\r\n", valid ? "yes" : "no", count);
-        std::for_each(replies.begin() + count, replies.end(), [](auto &s) { 
-            s = std::string(); });
         std::for_each(replies.begin(), replies.begin() + count, [](auto &s) { 
             printf(s.c_str()); });
 
