@@ -50,7 +50,7 @@
 #endif
 #include "hardware/i2c.h"
 #define I2C_PORT (i2c0)
-#define I2C_BAUD (10 * 1000)
+#define I2C_BAUD (20 * 1000)
 #define I2C_SDA (16)
 #define I2C_SCL (17)
 #define I2C_ADDR (0x3A)
@@ -246,6 +246,8 @@ int main() {
     bool valid; // intentionally uninitialised
 
     while (true) {
+        printf("+-- start --+\r\n");
+        
         valid = gps.ask_gll(reply);
         printf("GLL valid: %s.\r\n", valid ? "yes" : "no");
         printf(reply.c_str());
@@ -272,20 +274,19 @@ int main() {
         printf("RMC valid: %s.\r\n", valid ? "yes" : "no");
         printf(reply.c_str());
 
-        // example: execute a custom command that returns one line
-        teseo::nmea_rr pstcmu("$PSTMNMEAREQUEST,800000,0\n\r", "$PSTMNMEAREQUEST,800000,0");
-        valid = gps.ask_nmea(pstcmu, reply);
-        printf("PSTMCPU valid: %s.\r\n", valid ? "yes" : "no");
-        printf(reply.c_str());
+        /* commented out because this is a slow command. It's here to show
+        how to call a custom multi line command.
+        Uncomment if you want to test this.
+        */
+        // // example: execute a custom command that returns multiple lines
+        // printf("DUMPALMANAC command will take a while to reply.\r\n");
+        // teseo::nmea_rr almanac("$PSTMDUMPALMANAC\n\r", "$PSTMDUMPALMANAC");
+        // valid = gps.ask_nmea_multiple(almanac, replies, count);
+        // printf("DUMPALMANAC valid: %s. count: %u.\r\n", valid ? "yes" : "no", count);
+        // std::for_each(replies.begin(), replies.begin() + count, [](auto &s) { 
+        //     printf(s.c_str()); });
 
-        // example: execute a custom command that returns multiple lines (reusing the GSA command)
-        teseo::nmea_rr gsa("$PSTMNMEAREQUEST,4,0\n\r", "$PSTMNMEAREQUEST,4,0");
-        valid = gps.ask_nmea_multiple(gsa, replies, count);
-        printf("custom GSA valid: %s. count: %u.\r\n", valid ? "yes" : "no", count);
-        std::for_each(replies.begin(), replies.begin() + count, [](auto &s) { 
-            printf(s.c_str()); });
-
-        printf("\r\n");
+        printf("+--  end  --+\r\n\r\n");
         sleep_ms(1000);
     }
 }
