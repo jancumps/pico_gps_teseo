@@ -88,6 +88,8 @@ bool teseo::parse_multiline_reply(std::vector<std::string> & strings, const std:
         string_index = new_string_index + 2; // skip the separator
     }
     count = vector_index; // report the number of retrieved data lines.
+    std::for_each(strings.begin() + count, strings.end(), [](auto &discard) { 
+        discard = std::string(); });
     return valid;
 }
 
