@@ -8,9 +8,11 @@ include(pico_sdk_import.cmake)
 
 project(pico_gps_teseo C CXX ASM)
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 
 pico_sdk_init()
+
+# teseo reply response example --------------------------------------
 
 add_executable(${CMAKE_PROJECT_NAME}_reply_response
         ${CMAKE_CURRENT_SOURCE_DIR}/teseo_reply_response.cpp
@@ -38,11 +40,12 @@ pico_enable_stdio_usb(${CMAKE_PROJECT_NAME}_reply_response 0)
 
 pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_reply_response )
 
-# --------------------------------------
+# nmea parse example --------------------------------------
 
 add_executable(${CMAKE_PROJECT_NAME}_nmea_parse
         ${CMAKE_CURRENT_SOURCE_DIR}/teseo_with_nmea_parse.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/teseo_communicate.cpp
 )
 
@@ -53,6 +56,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}_nmea_parse
 target_include_directories(${CMAKE_PROJECT_NAME}_nmea_parse PUBLIC 
 ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo
 ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/callbackmanager
+${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea
 ${CMAKE_CURRENT_SOURCE_DIR}/port/pico
 )
 
