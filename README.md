@@ -2,6 +2,12 @@
 
 C++ driver for the ST Teseo-LIV3 GPS module.
 
+to checkout - including submodules:  
+
+```
+git clone https://github.com/jancumps/pico_gps_teseo.git --recursive
+```
+
 goals:
 - Teseo lib code does not need to know what the target microcontroller is.
 - Teseo lib code does not need to know if the project uses I2C or UART
