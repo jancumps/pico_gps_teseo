@@ -14,7 +14,7 @@ pico_sdk_init()
 
 add_executable(${CMAKE_PROJECT_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/teseo/teseo.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo.cpp
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME} 
@@ -22,7 +22,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC 
-${CMAKE_CURRENT_SOURCE_DIR}/teseo
+${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo
 ${CMAKE_CURRENT_SOURCE_DIR}/callbackmanager
 )
 
