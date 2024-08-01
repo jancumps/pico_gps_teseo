@@ -12,17 +12,17 @@ set(CMAKE_CXX_STANDARD 20)
 
 pico_sdk_init()
 
-add_executable(${CMAKE_PROJECT_NAME}
-        ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+add_executable(${CMAKE_PROJECT_NAME}_reply_response
+        ${CMAKE_CURRENT_SOURCE_DIR}/teseo_reply_response.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/teseo_communicate.cpp
 )
 
-target_link_libraries(${CMAKE_PROJECT_NAME} 
+target_link_libraries(${CMAKE_PROJECT_NAME}_reply_response 
         pico_stdlib hardware_gpio hardware_i2c hardware_uart
 )
 
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC 
+target_include_directories(${CMAKE_PROJECT_NAME}_reply_response PUBLIC 
 ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo
 ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/callbackmanager
 ${CMAKE_CURRENT_SOURCE_DIR}/port/pico
@@ -33,7 +33,7 @@ ${CMAKE_CURRENT_SOURCE_DIR}/port/pico
 add_compile_definitions(GPS_OVER_I2C)
 
 # select the debug output (not used by the GPS interface)
-pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 1)
-pico_enable_stdio_usb(${CMAKE_PROJECT_NAME} 0)
+pico_enable_stdio_uart(${CMAKE_PROJECT_NAME}_reply_response 1)
+pico_enable_stdio_usb(${CMAKE_PROJECT_NAME}_reply_response 0)
 
-pico_add_extra_outputs(${CMAKE_PROJECT_NAME} )
+pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_reply_response )
