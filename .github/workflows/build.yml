@@ -51,5 +51,5 @@ jobs:
           echo "skip until I can use GCC 11"
           mkdir build
           cd build
-          cmake .. -G "Unix Makefiles" -DPICO_COMPILER=/usr/bin/arm-none-eabi-gcc -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
+          cmake .. -G "Unix Makefiles" -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
           # cmake --build .
