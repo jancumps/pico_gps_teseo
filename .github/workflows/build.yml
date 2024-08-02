@@ -59,7 +59,7 @@ jobs:
           export PICO_TOOLCHAIN_PATH=/usr/bin/
           mkdir build
           cd build
-          cmake .. -G "Unix Makefiles" -PICO_TOOLCHAIN_PATH=/usr/bin -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
+          cmake .. -G "Unix Makefiles" -DPICO_TOOLCHAIN_PATH=/usr/bin -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
           cmake --build .
       #- name: Build Native
       #  working-directory: ${{github.workspace}}/pico_gps_teseo
