@@ -36,6 +36,7 @@ jobs:
       - name: Checkout pico-sdk submodules
         working-directory: ${{github.workspace}}/pico-sdk
         run: git submodule update --init
+
       - name: Install dependencies
         run: |
           sudo apt-get install cmake
@@ -48,14 +49,17 @@ jobs:
           #source /etc/profile
           #arm-none-eabi-gcc --version
           sudo apt install gcc-arm-none-eabi
+          whereis gcc-arm-none-eabi
       - name: Build Project
         working-directory: ${{github.workspace}}/pico_gps_teseo
         # bash required otherwise this mysteriously (no error) fails at "Generating cyw43_bus_pio_spi.pio.h"
         shell: bash
         run: |
+          export PATH=$PATH:/opt/gcc-arm-none-eabi/bin
+          export PICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin
           mkdir build
           cd build
-          cmake .. -G "Unix Makefiles" -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Debug -DPICO_BOARD=pico
+          cmake .. -G "Unix Makefiles" -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
           cmake --build .
       #- name: Build Native
       #  working-directory: ${{github.workspace}}/pico_gps_teseo
