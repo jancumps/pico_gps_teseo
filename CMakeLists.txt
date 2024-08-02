@@ -7,6 +7,7 @@ include(pico_sdk_import.cmake)
 # set(PICO_BOARD seeed_xiao_rp2040)
 
 project(pico_gps_teseo C CXX ASM)
+
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 23)
 
