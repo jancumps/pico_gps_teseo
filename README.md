@@ -1,8 +1,9 @@
-# C++ library for ST Teseo GPS
+# C++ library for ST Teseo GPS - Raspberry Pico / RP2040 port
 
-C++ driver for the ST Teseo-LIV3 GPS module.
+C++ driver for the ST Teseo-LIV3 GPS module.  
+Port for Rapberry Pico / RP2040, with examples.  
 
-to checkout - including submodules:  
+to checkout the full project, *including submodules*:  
 
 ```
 git clone https://github.com/jancumps/pico_gps_teseo.git --recursive
