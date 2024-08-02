@@ -60,10 +60,10 @@ jobs:
           export PICO_TOOLCHAIN_PATH=/usr/bin/
           export compiler_path=/usr/bin/
           export compiler_exe=arm-none-eabi-gcc
-          export PICO_GCC_TRIPLE=arm-none-eabi
+          export PICO_COMPILER=/usr/bin/arm-none-eabi-gcc
           mkdir build
           cd build
-          cmake .. -G "Unix Makefiles" -Dcompiler_path=/usr/bin/ -Dcompiler_exe=arm-none-eabi-gcc -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
+          cmake .. -G "Unix Makefiles" -DPICO_COMPILER=/usr/bin/arm-none-eabi-gcc -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
           cmake --build .
       #- name: Build Native
       #  working-directory: ${{github.workspace}}/pico_gps_teseo
