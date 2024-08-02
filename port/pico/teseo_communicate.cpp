@@ -4,6 +4,7 @@
 #include "hardware/gpio.h"
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include <algorithm>
 
 uint8_t buf[BUFFSIZE]; // read buffer, intentionally not initialised
 

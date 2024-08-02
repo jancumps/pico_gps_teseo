@@ -1,3 +1,6 @@
 [submodule "gps_teseo_lib"]
 	path = gps_teseo_lib
 	url = https://github.com/jancumps/gps_teseo_lib.git
+[submodule "gps_nmea_lib"]
+	path = gps_nmea_lib
+	url = https://github.com/jancumps/gps_nmea_lib.git
