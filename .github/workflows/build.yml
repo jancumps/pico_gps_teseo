@@ -40,10 +40,20 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get install cmake
-          sudo apt install gcc-arm-none-eabi
-          whereis arm-none-eabi-gcc
-          ls -lrta /usr/bin/arm-none-eabi-gcc
-          /usr/bin/arm-none-eabi-gcc --version
+          curl -Lo gcc-arm-none-eabi.tar.bz2 "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2?rev=78196d3461ba4c9089a67b5f33edf82a&hash=5631ACEF1F8F237389F14B41566964EC"
+          sudo mkdir /opt/gcc-arm-none-eabi
+          sudo tar xf gcc-arm-none-eabi.tar.bz2 --strip-components=1 -C /opt/gcc-arm-none-eabi
+          echo 'export PATH=$PATH:/opt/gcc-arm-none-eabi/bin' | sudo tee -a /etc/profile.d/gcc-arm-none-eabi.sh
+          export PATH=$PATH:/opt/gcc-arm-none-eabi/bin
+          export PICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin
+          source /etc/profile
+          ls =lrta /opt/gcc-arm-none-eabi/bin
+          gcc-arm-none-eabi --version
+          
+          # sudo apt install gcc-arm-none-eabi
+          # whereis arm-none-eabi-gcc
+          # ls -lrta /usr/bin/arm-none-eabi-gcc
+          # /usr/bin/arm-none-eabi-gcc --version
 
       - name: Build Project
         working-directory: ${{github.workspace}}/pico_gps_teseo
@@ -53,5 +63,5 @@ jobs:
           # echo "skip until I can use GCC 11"
           mkdir build
           cd build
-          cmake .. -G "Unix Makefiles" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/arm-none-eabi-g++ -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
+          cmake .. -G "Unix Makefiles" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-g++ -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
           cmake --build .
