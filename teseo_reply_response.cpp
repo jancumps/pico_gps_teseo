@@ -29,6 +29,7 @@
 // for debug messages
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include "reset.h"
 
 teseo::teseo gps;
 std::string reply;

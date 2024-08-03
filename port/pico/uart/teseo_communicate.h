@@ -12,26 +12,6 @@
 // memory growth impact (acceptable for larger systems like PC, processors, ...)
 #define MAX_SATELLITE_REPLIES 7
 
-// #define GPS_OVER_I2C  // you can set this in the CMake file
-// #define GPS_OVER_UART // you can set this in the CMake file
-
-#ifdef GPS_OVER_I2C
-#ifdef GPS_OVER_UART
-#error "invalid configuration. define GPS_OVER_I2C or GPS_OVER_UART"
-#endif
-#include "hardware/i2c.h"
-#define I2C_PORT (i2c0)
-#define I2C_BAUD (20 * 1000)
-#define I2C_SDA (16)
-#define I2C_SCL (17)
-#define I2C_ADDR (0x3A)
-#define BUFFSIZE (1024)
-#endif
-
-#ifdef GPS_OVER_UART
-#ifdef GPS_OVER_I2C
-#error "invalid configuration. define GPS_OVER_I2C or GPS_OVER_UART"
-#endif
 #include "hardware/uart.h"
 #include <cassert>
 #define UART_PORT (uart1)
@@ -49,22 +29,6 @@
 #define UART_WAITFORREPLY_MS (500)
 // forward declaration
 void on_uart_rx();
-int UART_IRQ = UART1_IRQ;
-uint8_t *pBuf; // explicitely uninitialised
-volatile bool bWantChars; // explicitely uninitialised
-#endif
-
-#ifndef GPS_OVER_I2C
-#ifndef GPS_OVER_UART
-#error "invalid configuration. define GPS_OVER_I2C or GPS_OVER_UART"
-#endif
-#endif
-
-
-#define RESET_PIN (18)
-#define RESET_APPLY_MS (1)
-// recover must be more than 3 seconds
-#define RESET_RECOVER_MS (4000)
 
 // calculate 70 characters per satellite, + 60 for the status line
 // many libraries limit the number of satelites to say 6
@@ -73,7 +37,5 @@ volatile bool bWantChars; // explicitely uninitialised
 void write(const std::string& s);
 void read(std::string& s);
 void init();
-void reset();
-
 
 #endif // TESEO_COMMUNICATE_H_
