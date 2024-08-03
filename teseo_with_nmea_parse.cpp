@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 
+#include "reset.h"
+
 teseo::teseo gps;
 std::string reply;
 std::vector<std::string> replies(NMEA_MAX_REPLIES); 
