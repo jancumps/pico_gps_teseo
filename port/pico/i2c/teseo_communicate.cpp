@@ -1,0 +1,46 @@
+#include "teseo_communicate.h"
+// for memset
+#include <cstring>
+#include "hardware/gpio.h"
+#include <stdio.h>
+#include "pico/stdlib.h"
+#include <algorithm>
+#include "reset.h"
+
+
+uint8_t buf[BUFFSIZE]; // read buffer, intentionally not initialised
+
+void init() {
+    stdio_init_all();
+    // I2C is "open drain", pull ups to keep signal high when no data is being sent 
+    // (not needed. board has pullups)
+    i2c_init(I2C_PORT, I2C_BAUD);
+    gpio_set_function(I2C_SDA, GPIO_FUNC_I2C);
+    gpio_set_function(I2C_SCL, GPIO_FUNC_I2C);
+    // gpio_pull_up(I2C_SDA);
+    // gpio_pull_up(I2C_SCL);
+    
+    gpio_init(RESET_PIN);
+    gpio_put(RESET_PIN, 1);
+    gpio_set_dir(RESET_PIN, GPIO_OUT);    
+}
+
+void write(const std::string& s) {
+    i2c_write_blocking(I2C_PORT, I2C_ADDR, reinterpret_cast<const uint8_t*>(s.c_str()), s.length() +1, false);
+    return;  
+}
+
+void read(std::string& s) {
+    memset (buf, 0, BUFFSIZE);  // initialise buffer before reading
+    for (buf[BUFFSIZE-1] = 0; buf[BUFFSIZE-1] != 0xff;) { // TODO in line with AN5203 remove after loooong testing
+      // read in one go as register addresses auto-increment
+      i2c_read_blocking(I2C_PORT, I2C_ADDR, buf, BUFFSIZE, false);
+      // find first non 0xFF. That's the start
+      auto iter_begin =  std::find(std::begin(buf), std::end(buf), '$');
+      // find first 0xFF. That's the end
+      auto iter_end =  std::find(iter_begin, std::end(buf), 0xff);
+      s = std::string(iter_begin, iter_end);
+    }
+    return;
+}
+
