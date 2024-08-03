@@ -48,7 +48,7 @@ jobs:
           export PICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin
           source /etc/profile
           ls -lrta /opt/gcc-arm-none-eabi/bin
-          gcc-arm-none-eabi --version
+          arm-none-eabi-c++ --version
           
           # sudo apt install gcc-arm-none-eabi
           # whereis arm-none-eabi-gcc
