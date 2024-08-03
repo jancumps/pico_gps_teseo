@@ -47,7 +47,7 @@ jobs:
           export PATH=$PATH:/opt/gcc-arm-none-eabi/bin
           export PICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin
           source /etc/profile
-          ls =lrta /opt/gcc-arm-none-eabi/bin
+          ls -lrta /opt/gcc-arm-none-eabi/bin
           gcc-arm-none-eabi --version
           
           # sudo apt install gcc-arm-none-eabi
