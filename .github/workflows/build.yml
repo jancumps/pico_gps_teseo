@@ -78,9 +78,5 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: nightly_development
-          files: |
-            pico_gps_teseo/pico_gps_teseo/pico_gps_teseo/pico_gps_teseo/build/pico_gps_teseo_reply_response_uart.uf2
-            pico_gps_teseo/pico_gps_teseo/pico_gps_teseo/pico_gps_teseo/build/pico_gps_teseo_reply_response_i2c.uf2
-            pico_gps_teseo/pico_gps_teseo/pico_gps_teseo/pico_gps_teseo/build/pico_gps_teseo_nmea_parse_uart.uf2
-            pico_gps_teseo/pico_gps_teseo/pico_gps_teseo/pico_gps_teseo/build/pico_gps_teseo_nmea_parse_i2c.uf2
+          files: pico_gps_teseo_*.uf2
 
