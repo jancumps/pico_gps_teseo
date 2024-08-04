@@ -120,4 +120,4 @@ target_include_directories(${CMAKE_PROJECT_NAME}_nmea_parse_i2c PUBLIC
 pico_enable_stdio_uart(${CMAKE_PROJECT_NAME}_nmea_parse_i2c 1)
 pico_enable_stdio_usb(${CMAKE_PROJECT_NAME}_nmea_parse_i2c 0)
 
-pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_nmea_parse_uart )
+pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_nmea_parse_i2c )
