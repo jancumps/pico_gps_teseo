@@ -72,7 +72,7 @@ jobs:
           cd ..
 
       - name: Deploy Nightly Development Release
-        if: ! contains(github.ref, 'main')        
+        if: "!contains(github.ref, 'main')"
         uses: pyTooling/Actions/releaser@r0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
