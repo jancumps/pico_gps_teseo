@@ -1,7 +1,7 @@
 name: Build on ubuntu against pico-sdk develop
 on:
-  schedule:
-    - cron: '0 1 * * *'
+#  schedule:
+#    - cron: '0 1 * * *'
   workflow_dispatch:
   #push:
   #  branches:
@@ -22,6 +22,7 @@ jobs:
           echo "Cleaning up previous run"
           rm -rf "${{ github.workspace }}"
           mkdir -p "${{ github.workspace }}"
+
       - name: Checkout pico_gps_teseo
         uses: actions/checkout@v4
         with:
@@ -64,6 +65,7 @@ jobs:
         # bash required otherwise this mysteriously (no error) fails at "Generating cyw43_bus_pio_spi.pio.h"
         shell: bash
         run: |
+          echo ${{ github.ref }}
           mkdir build
           cd build
           cmake .. -G "Unix Makefiles" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-g++ -DPICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
@@ -71,14 +73,10 @@ jobs:
           cd ..
 
       - name: Deploy Nightly Development Release
-        if: contains(github.ref, 'develop')        
+        if: "!contains(github.ref, 'main')"
         uses: pyTooling/Actions/releaser@r0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: nightly_development
-          files: |
-            ${{github.workspace}}/pico_gps_tese/pico_gps_teseo/build/pico_gps_teseo_reply_response_uart.uf2
-            ${{github.workspace}}/pico_gps_teseo/pico_gps_teseo/build/pico_gps_teseo_reply_response_i2c.uf2
-            ${{github.workspace}}/pico_gps_teseo/pico_gps_teseo/build/pico_gps_teseo_nmea_parse_uart.uf2
-            ${{github.workspace}}/pico_gps_teseo/pico_gps_teseo/build/pico_gps_teseo_nmea_parse_uart.uf2
+          files: pico_gps_teseo_*.uf2
 
