@@ -66,3 +66,17 @@ jobs:
           cd build
           cmake .. -G "Unix Makefiles" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-g++ -DPICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
           cmake --build .
+          cd ..
+
+      - name: Deploy Nightly Development Release
+        uses: pyTooling/Actions/releaser@r0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          rm: TRUE
+          tag: nightly_development
+          files: |
+            ${{github.workspace}}/pico_gps_teseo/build/pico_gps_teseo_reply_response_uart.uf2
+            ${{github.workspace}}/pico_gps_teseo/build/pico_gps_teseo_reply_response_i2c.uf2
+            ${{github.workspace}}/pico_gps_teseo/build/pico_gps_teseo_nmea_parse_uart.uf2
+            ${{github.workspace}}/pico_gps_teseo/build/pico_gps_teseo_nmea_parse_uart.uf2
+
