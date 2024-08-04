@@ -22,6 +22,7 @@ jobs:
           echo "Cleaning up previous run"
           rm -rf "${{ github.workspace }}"
           mkdir -p "${{ github.workspace }}"
+
       - name: Checkout pico_gps_teseo
         uses: actions/checkout@v4
         with:
@@ -71,7 +72,7 @@ jobs:
           cd ..
 
       - name: Deploy Nightly Development Release
-        if: contains(github.ref, 'develop')        
+        if: ! contains(github.ref, 'main')        
         uses: pyTooling/Actions/releaser@r0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
