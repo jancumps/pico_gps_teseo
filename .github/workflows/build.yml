@@ -72,11 +72,10 @@ jobs:
         uses: pyTooling/Actions/releaser@r0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          rm: TRUE
           tag: nightly_development
           files: |
-            /home/runner/work/pico_gps_teseo/pico_gps_teseo/pico_gps_teseo/build/pico_gps_teseo_reply_response_uart.uf2
-            /home/runner/work/pico_gps_teseo/pico_gps_teseo/pico_gps_teseo/build/pico_gps_teseo_reply_response_i2c.uf2
+            ${{github.workspace}}/pico_gps_tese/opico_gps_teseo/build/pico_gps_teseo_reply_response_uart.uf2
+            ${{github.workspace}}/pico_gps_tese/opico_gps_teseo/build/pico_gps_teseo_reply_response_i2c.uf2
             ${{github.workspace}}/pico_gps_tese/opico_gps_teseo/build/pico_gps_teseo_nmea_parse_uart.uf2
             ${{github.workspace}}/pico_gps_teseo/pico_gps_teseo/build/pico_gps_teseo_nmea_parse_uart.uf2
 
