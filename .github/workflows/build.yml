@@ -69,6 +69,7 @@ jobs:
           cd ..
 
       - name: Deploy Nightly Development Release
+        if: contains(github.ref, 'develop')        
         uses: pyTooling/Actions/releaser@r0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
