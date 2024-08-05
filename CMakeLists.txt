@@ -88,6 +88,7 @@ pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_reply_response_i2c )
 
 add_executable(${CMAKE_PROJECT_NAME}_nmea_parse_uart
         ${CMAKE_CURRENT_SOURCE_DIR}/teseo_with_nmea_parse.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp       
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME}_nmea_parse_uart 
@@ -106,6 +107,7 @@ pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_nmea_parse_uart )
 
 add_executable(${CMAKE_PROJECT_NAME}_nmea_parse_i2c
         ${CMAKE_CURRENT_SOURCE_DIR}/teseo_with_nmea_parse.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp       
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME}_nmea_parse_i2c 
