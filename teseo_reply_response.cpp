@@ -43,11 +43,9 @@ int main() {
     gps.getWriteCallback().set([](const std::string& s) -> void {
         write(s);
     });
-
     gps.getReadCallback().set([](std::string& s) -> void {
         read(s);
     });
-
     gps.getResetCallback().set([]() -> void {
         reset();
     });
@@ -58,6 +56,7 @@ int main() {
     https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioning-sensor--stmicroelectronics.pdf
     */
     gps.init();
+    
     uint count; // intentionally uninitialised
     bool valid; // intentionally uninitialised
 
