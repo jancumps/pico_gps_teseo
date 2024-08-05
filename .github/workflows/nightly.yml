@@ -1,15 +1,11 @@
-name: Build on ubuntu against pico-sdk develop
+name: Build on ubuntu against pico-sdk develop, and deploy to github prerelease
 on:
+#  schedule:
+#    - cron: '0 1 * * *'
   workflow_dispatch:
-  #push:
-  #  branches:
-  #    - 'develop'
-  #    - 'main'
-  pull_request:
-    types: [opened, reopened]
+  push:
     branches:
       - 'develop'
-      - 'main'
 
 jobs:
   build:
@@ -25,6 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: pico_gps_teseo
+          ref: develop
           submodules: true
 
       - name: Checkout pico-sdk/develop
@@ -53,6 +50,9 @@ jobs:
           arm-none-eabi-c++ --version
           
           # sudo apt install gcc-arm-none-eabi
+          # whereis arm-none-eabi-gcc
+          # ls -lrta /usr/bin/arm-none-eabi-gcc
+          # /usr/bin/arm-none-eabi-gcc --version
 
       - name: Build Project
         working-directory: ${{github.workspace}}/pico_gps_teseo
@@ -66,4 +66,12 @@ jobs:
           cmake --build .
           cd ..
           ls -lrt build/*.uf2
+
+
+      - name: Deploy Nightly Development Release
+        uses: pyTooling/Actions/releaser@r0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: nightly_development
+          files: /home/runner/work/pico_gps_teseo/pico_gps_teseo/pico_gps_teseo/build/pico_gps_teseo_*.uf2
 
