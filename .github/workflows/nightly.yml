@@ -1,15 +1,11 @@
 name: Build on ubuntu against pico-sdk develop
 on:
+#  schedule:
+#    - cron: '0 1 * * *'
   workflow_dispatch:
-  #push:
-  #  branches:
-  #    - 'develop'
-  #    - 'main'
-  pull_request:
-    types: [opened, reopened]
+  push:
     branches:
       - 'develop'
-      - 'main'
 
 jobs:
   build:
@@ -42,6 +38,7 @@ jobs:
         run: |
           sudo apt-get install cmake
           # install gcc cross-compile for ARM v 13.3.1
+          # curl -Lo gcc-arm-none-eabi.tar.bz2 "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2?rev=78196d3461ba4c9089a67b5f33edf82a&hash=5631ACEF1F8F237389F14B41566964EC"
           curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/13.3.rel1/binrel/arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi.tar.xz"
           sudo mkdir /opt/gcc-arm-none-eabi
           sudo tar xf gcc-arm-none-eabi.tar.xz --strip-components=1 -C /opt/gcc-arm-none-eabi
@@ -53,6 +50,9 @@ jobs:
           arm-none-eabi-c++ --version
           
           # sudo apt install gcc-arm-none-eabi
+          # whereis arm-none-eabi-gcc
+          # ls -lrta /usr/bin/arm-none-eabi-gcc
+          # /usr/bin/arm-none-eabi-gcc --version
 
       - name: Build Project
         working-directory: ${{github.workspace}}/pico_gps_teseo
@@ -66,4 +66,12 @@ jobs:
           cmake --build .
           cd ..
           ls -lrt build/*.uf2
+
+
+      - name: Deploy Nightly Development Release
+        uses: pyTooling/Actions/releaser@r0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: nightly_development
+          files: /home/runner/work/pico_gps_teseo/pico_gps_teseo/pico_gps_teseo/build/pico_gps_teseo_*.uf2
 
