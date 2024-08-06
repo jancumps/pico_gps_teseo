@@ -18,4 +18,5 @@ goals:
 1: [Pico and I2C support](https://community.element14.com/technologies/embedded/b/blog/posts/c-library-for-st-teseo-gps---pt-1-pico-and-i2c-support?CommentId=a0dfd5e9-20a5-4ae6-8b1d-723620f2db3f)  
 2: [Dynamic GPS configuration (and some other things) ](https://community.element14.com/technologies/embedded/b/blog/posts/c-library-for-st-teseo-gps---pt-2-dynamic-gps-configuration-and-some-other-things)  
 
-Pico specific code sits in the port/pico folder.  
+Raspberry Pico specific code sits in the port/pico folder.  
+Latest development binaries are available on the [nightly release](https://github.com/jancumps/pico_gps_teseo/releases/tag/nightly_development).
