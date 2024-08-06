@@ -32,15 +32,26 @@ void write(const std::string& s) {
 
 void read(std::string& s) {
     memset (buf, 0, BUFFSIZE);  // initialise buffer before reading
-    for (buf[BUFFSIZE-1] = 0; buf[BUFFSIZE-1] != 0xff;) { // TODO in line with AN5203 remove after loooong testing
-      // read in one go as register addresses auto-increment
-      i2c_read_blocking(I2C_PORT, I2C_ADDR, buf, BUFFSIZE, false);
-      // find first non 0xFF. That's the start
-      auto iter_begin =  std::find(std::begin(buf), std::end(buf), '$');
-      // find first 0xFF. That's the end
-      auto iter_end =  std::find(iter_begin, std::end(buf), 0xff);
-      s = std::string(iter_begin, iter_end);
+    bool gotData = false;
+    uint8_t *bufptr = buf;
+    // read in one go as register addresses auto-increment
+    //   i2c_read_blocking(I2C_PORT, I2C_ADDR, buf, BUFFSIZE, false);      // read in one go as register addresses auto-increment
+    do {
+        i2c_read_blocking(I2C_PORT, I2C_ADDR, bufptr, 1, false);
+        if (*bufptr != 0xff) {
+            gotData = true;
+            bufptr++;
+        } else if (gotData) { // we are done
+            *bufptr = 0;
+            bufptr = buf + BUFFSIZE;
+        }
     }
+    while (bufptr - buf < BUFFSIZE);
+    // find first non 0xFF. That's the start
+    auto iter_begin =  std::find(std::begin(buf), std::end(buf), '$');
+    // find first 0xFF. That's the end
+    auto iter_end =  std::find(iter_begin, std::end(buf), 0xff);
+    s = std::string(iter_begin, iter_end);
     return;
 }
 
