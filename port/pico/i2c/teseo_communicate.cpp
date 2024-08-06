@@ -50,11 +50,11 @@ void read(std::string& s) {
         }
     }
     while ((bufptr - buf < BUFFSIZE) || (failures == I2C_FAIL_AFTER_EMPTY_READS));
-    // find first non 0xFF. That's the start. TODO: this may be unneccessary, now that I skip initial 0xff and break at the first trailing 0xff
-    auto iter_begin =  std::find(std::begin(buf), std::end(buf), '$');
+    // find first non 0xFF. That's the start. TODO: this may be unneccessary, now that I skip initial 0xff and break at the first trailing 0xff. remove after testing.
+    //auto iter_begin =  std::find(std::begin(buf), std::end(buf), '$');
     // find first 0xFF. That's the end
-    auto iter_end =  std::find(iter_begin, std::end(buf), 0xff);
-    s = std::string(iter_begin, iter_end);
+    //auto iter_end =  std::find(iter_begin, std::end(buf), 0xff);
+    s = reinterpret_cast<const char*>(buf);
     return;
 }
 
