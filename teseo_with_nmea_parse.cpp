@@ -1,18 +1,14 @@
 #include <string>
-// for std::find
-#include <algorithm>
 
 #include "teseo_communicate.h"
+#include "reset.h"
 #include "teseo.h"
 // for debug messages
 #include <stdio.h>
 #include "pico/stdlib.h"
 
-#include "reset.h"
-
 #include "nmea.h"
 
-#include <format>
 
 teseo::teseo gps;
 std::string reply;
@@ -21,13 +17,46 @@ std::vector<std::string> replies(NMEA_MAX_REPLIES);
 uint count; // intentionally uninitialised
 bool valid; // intentionally uninitialised
 
+void print_t(const nmea::time_t& t) {
+    printf("%02i:%02i:%02i.%03i", 
+        (int)(t.hours().count()), (int)(t.minutes().count()),
+        (int)(t.seconds().count()), (int)(t.subseconds().count()));
+}
+
+void print_d(const std::chrono::year_month_day& t) {
+    printf("%4i-%02i-%02i", 
+        t.year(), t.month(),
+        t.day());
+}
+
+void print_talker(const nmea::nmea::talker_id& talker_id) {
+    switch (talker_id) {
+    case nmea::nmea::gps:
+        printf("gps");
+        break;
+    case nmea::nmea::glonass:
+        printf("glonass");
+        break;
+    case nmea::nmea::galileo:
+        printf("galileo");
+        break;
+    default:
+        printf("other");
+        break;          
+    }
+}
+
 void test_gll() {
     valid = gps.ask_gll(reply);
     if (!valid) { return; }
     nmea::gll o;
     valid = nmea::gll::from_data(reply, o);
-    printf("GLL source: %i. lat: %f lon: %f.\r\n", 
-        o.source, o.lat, o.lon);
+    printf("GLL source: ");
+    print_talker(o.source);
+    printf(". lat: %f lon: %f, time: ", 
+        o.lat, o.lon);
+    print_t(o.t);
+    printf(".\n");
     return;
 }
 
@@ -37,7 +66,9 @@ void test_gsv() {
 	for(auto r : replies) {
 		nmea::gsv o;
 	    valid = nmea::gsv::from_data(r, o);
-        printf("GSV source: %i.\r\n", 
+        printf("GSV source: ");
+        print_talker(o.source);
+        printf(".\r\n", 
             o.source);
 	    for(const auto s : o.sats) {
             printf("sat prn: %i, elev: %i, azim: %i, snr: %i.\r\n", 
@@ -52,8 +83,14 @@ void test_rmc() {
     if (!valid) { return; }
     nmea::rmc o;
     valid = nmea::rmc::from_data(reply, o);
-    printf("RMC source: %i. lat: %f lon: %f.\r\n", 
-        o.source, o.lat, o.lon);
+    printf("RMC source: ");
+    print_talker(o.source);
+    printf(". lat: %f lon: %f. ", 
+        o.lat, o.lon);
+    print_t(o.t);
+    printf(". ");
+    print_d(o.d);
+    printf(".\n");
     return;
 }
 
@@ -78,9 +115,11 @@ int main() {
     gps.init();
     
     while (true) {
-    	test_gll();
+        printf("+-- start --+\r\n");
+       	test_gll();
 	    test_gsv();
 	    test_rmc();
+        printf("+--  end  --+\r\n\r\n");
         sleep_ms(1000);
     }
 }
