@@ -33,6 +33,7 @@ void write(const std::string& s) {
 void read(std::string& s) {
     memset (buf, 0, BUFFSIZE);  // initialise buffer before reading
     bool gotData = false;
+    unsigned int failures = 0U;
     uint8_t *bufptr = buf;
     // read in one go as register addresses auto-increment
     //   i2c_read_blocking(I2C_PORT, I2C_ADDR, buf, BUFFSIZE, false);      // read in one go as register addresses auto-increment
@@ -44,10 +45,12 @@ void read(std::string& s) {
         } else if (gotData) { // we are done
             *bufptr = 0;
             bufptr = buf + BUFFSIZE;
+        } else {
+            failures++;
         }
     }
-    while (bufptr - buf < BUFFSIZE);
-    // find first non 0xFF. That's the start
+    while ((bufptr - buf < BUFFSIZE) || (failures == I2C_FAIL_AFTER_EMPTY_READS));
+    // find first non 0xFF. That's the start. TODO: this may be unneccessary, now that I skip initial 0xff and break at the first trailing 0xff
     auto iter_begin =  std::find(std::begin(buf), std::end(buf), '$');
     // find first 0xFF. That's the end
     auto iter_end =  std::find(iter_begin, std::end(buf), 0xff);
