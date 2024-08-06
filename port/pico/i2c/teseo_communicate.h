@@ -14,7 +14,7 @@
 
 #include "hardware/i2c.h"
 #define I2C_PORT (i2c0)
-#define I2C_BAUD (20 * 1000)
+#define I2C_BAUD (100 * 1000)
 #define I2C_SDA (16)
 #define I2C_SCL (17)
 #define I2C_ADDR (0x3A)
