@@ -35,8 +35,6 @@ void read(std::string& s) {
     bool gotData = false;
     unsigned int failures = 0U;
     uint8_t *bufptr = buf;
-    // read in one go as register addresses auto-increment
-    //   i2c_read_blocking(I2C_PORT, I2C_ADDR, buf, BUFFSIZE, false);      // read in one go as register addresses auto-increment
     do {
         i2c_read_blocking(I2C_PORT, I2C_ADDR, bufptr, 1, false);
         if (*bufptr != 0xff) {
@@ -50,10 +48,6 @@ void read(std::string& s) {
         }
     }
     while ((bufptr - buf < BUFFSIZE) || (failures == I2C_FAIL_AFTER_EMPTY_READS));
-    // find first non 0xFF. That's the start. TODO: this may be unneccessary, now that I skip initial 0xff and break at the first trailing 0xff. remove after testing.
-    //auto iter_begin =  std::find(std::begin(buf), std::end(buf), '$');
-    // find first 0xFF. That's the end
-    //auto iter_end =  std::find(iter_begin, std::end(buf), 0xff);
     s = reinterpret_cast<const char*>(buf);
     return;
 }
