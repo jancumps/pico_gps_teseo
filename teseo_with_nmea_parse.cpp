@@ -46,6 +46,10 @@ void print_talker(const nmea::nmea::talker_id& talker_id) {
     }
 }
 
+void reset_replies() {
+    replies.clear();
+}
+
 void test_gll() {
     valid = gps.ask_gll(reply);
     if (!valid) { return; }
@@ -63,7 +67,7 @@ void test_gll() {
 void test_gsv() {
     valid = gps.ask_gsv(replies, count);
     if (!valid) { return; }
-	for(auto r : replies) {
+	for(auto r : std::ranges::subrange(replies.begin(), replies.begin() + count)) {
 		nmea::gsv o;
 	    valid = nmea::gsv::from_data(r, o);
         printf("GSV source: ");
