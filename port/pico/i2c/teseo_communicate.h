@@ -19,7 +19,7 @@
 #define I2C_SCL (17)
 #define I2C_ADDR (0x3A)
 #define BUFFSIZE (1024)
-#define I2C_FAIL_AFTER_EMPTY_READS (1024)
+#define I2C_FAIL_AFTER_EMPTY_READS (1024 * 16)
 
 
 // calculate 70 characters per satellite, + 60 for the status line
