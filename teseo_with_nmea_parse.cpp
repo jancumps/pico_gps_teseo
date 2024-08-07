@@ -46,13 +46,10 @@ void print_talker(const nmea::nmea::talker_id& talker_id) {
     }
 }
 
-void reset_replies() {
-    replies.clear();
-}
-
 void test_gll() {
     valid = gps.ask_gll(reply);
     if (!valid) { return; }
+    assert(reply.size());
     nmea::gll o;
     valid = nmea::gll::from_data(reply, o);
     printf("GLL source: ");
