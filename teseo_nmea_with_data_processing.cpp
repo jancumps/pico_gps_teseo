@@ -9,12 +9,15 @@
 
 #include "nmea.h"
 
-
 teseo::teseo gps;
 std::vector<std::string> replies(NMEA_MAX_REPLIES); 
 // vector size is a suggestion. STL will allocate at least NMEA_MAX_REPLIES
 uint count; // intentionally uninitialised
 bool valid; // intentionally uninitialised
+
+// this vector will receive all parsed objects. 
+// this example will perform aggregations and calculations over that container.
+std::vector<nmea::gsv> gsv_set(NMEA_MAX_REPLIES); 
 
 void print_t(const nmea::time_t& t) {
     printf("%02i:%02i:%02i.%03i", 
@@ -45,24 +48,19 @@ void print_talker(const nmea::nmea::talker_id& talker_id) {
     }
 }
 
-
 void retrieve_gsv() {
     valid = gps.ask_gsv(replies, count);
     if (!valid) { return; }
+    unsigned int index = 0;
 	for(auto r : std::ranges::subrange(replies.begin(), replies.begin() + count)) {
-		nmea::gsv o;
-	    valid = nmea::gsv::from_data(r, o);
-        printf("GSV source: ");
-        print_talker(o.source);
-        printf(".\r\n");
-	    for(const auto s : o.sats) {
-            printf("sat prn: %i, elev: %i, azim: %i, snr: %i.\r\n", 
-                s.prn, s.elev, s.azim, s.snr);
-	    }
+        valid = nmea::gsv::from_data(r, gsv_set[index]);
+        if (!valid) {
+            break;
+        }
+        index++;
 	}
     return;
 }
-
 
 int main() {
     init();

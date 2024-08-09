@@ -44,11 +44,11 @@ void read(std::string& s) {
             *bufptr = 0;
             bufptr = buf + BUFFSIZE;
         } else {
+            *bufptr = 0;
             failures++;
         }
-        assert(failures < I2C_FAIL_AFTER_EMPTY_READS);  // at debug, check if we have unreasonable amount of false reads
     }
-    while ((bufptr - buf < BUFFSIZE) || (failures == I2C_FAIL_AFTER_EMPTY_READS));
+    while ((bufptr - buf < BUFFSIZE) && (failures < I2C_FAIL_AFTER_EMPTY_READS));
     s = reinterpret_cast<const char*>(buf);
     return;
 }
