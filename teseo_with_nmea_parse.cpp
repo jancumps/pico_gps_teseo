@@ -69,13 +69,26 @@ void test_gsv() {
 	    valid = nmea::gsv::from_data(r, o);
         printf("GSV source: ");
         print_talker(o.source);
-        printf(".\r\n", 
-            o.source);
+        printf(".\r\n");
 	    for(const auto s : o.sats) {
             printf("sat prn: %i, elev: %i, azim: %i, snr: %i.\r\n", 
                 s.prn, s.elev, s.azim, s.snr);
 	    }
 	}
+    return;
+}
+
+void test_gga() {
+    valid = gps.ask_gga(reply);
+    if (!valid) { return; }
+    nmea::gga o;
+    valid = nmea::gga::from_data(reply, o);
+    printf("GGA source: ");
+    print_talker(o.source);
+    printf(". lat: %f lon: %f, alt: %.3f, sats: %i. ", 
+        o.lat, o.lon, o.alt, o.sats);
+    print_t(o.t);
+    printf(".\n");
     return;
 }
 
@@ -119,6 +132,7 @@ int main() {
         printf("+-- start --+\r\n");
        	test_gll();
 	    test_gsv();
+       	test_gga();
 	    test_rmc();
         printf("+--  end  --+\r\n\r\n");
         sleep_ms(1000);
