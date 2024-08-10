@@ -15,9 +15,10 @@ std::vector<std::string> replies(NMEA_MAX_REPLIES);
 uint count; // intentionally uninitialised
 bool valid; // intentionally uninitialised
 
-// this vector will receive all parsed objects. 
-// this example will perform aggregations and calculations over that container.
-std::vector<nmea::gsv> gsv_set(NMEA_MAX_REPLIES); 
+// these array will receive parsed objects. 
+// this example will perform aggregations and calculations over the containers.
+std::array<nmea::gsv, NMEA_MAX_REPLIES> gsv_set = {}; 
+std::array<nmea::gsv_sat, NMEA_MAX_REPLIES * 4> sat_set = {}; 
 
 void print_t(const nmea::time_t& t) {
     printf("%02i:%02i:%02i.%03i", 
@@ -52,14 +53,25 @@ void retrieve_gsv() {
     valid = gps.ask_gsv(replies, count);
     if (!valid) { return; }
     unsigned int index = 0;
-	for(auto r : std::ranges::subrange(replies.begin(), replies.begin() + count)) {
+	for(const auto& r : std::ranges::subrange(replies.begin(), replies.begin() + count)) {
         valid = nmea::gsv::from_data(r, gsv_set[index]);
         if (!valid) {
             break;
         }
         index++;
 	}
+    for(auto&& r: std::ranges::subrange(gsv_set.begin() + count, gsv_set.end())) {
+        r = {}; // clean out unused tail of the container
+    }
+
     return;
+}
+
+
+size_t count_constellations(const nmea::nmea::talker_id source) {
+    size_t i =  std::count_if(gsv_set.begin(), gsv_set.end(),              
+                           [source](const auto& o){ return (o.source == source); });
+    return i;
 }
 
 int main() {
@@ -82,9 +94,16 @@ int main() {
     */
     gps.init();
     
+    size_t count; // intentionally uninitialised
     while (true) {
         printf("+-- start --+\r\n");
 	    retrieve_gsv();
+
+        count = count_constellations(nmea::nmea::gps);
+        printf("count of gps: %i\r\n", count);
+        count = count_constellations(nmea::nmea::glonass);
+        printf("count of glonass: %i\r\n", count);
+
         printf("+--  end  --+\r\n\r\n");
         sleep_ms(1000);
     }
