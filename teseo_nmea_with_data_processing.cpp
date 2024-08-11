@@ -1,4 +1,5 @@
 #include <string>
+#include <ranges>
 
 #include "teseo_communicate.h"
 #include "reset.h"
@@ -9,13 +10,16 @@
 
 #include "nmea.h"
 
-
 teseo::teseo gps;
-std::string reply;
 std::vector<std::string> replies(NMEA_MAX_REPLIES); 
 // vector size is a suggestion. STL will allocate at least NMEA_MAX_REPLIES
 uint count; // intentionally uninitialised
 bool valid; // intentionally uninitialised
+
+// these array will receive parsed objects. 
+// this example will perform aggregations and calculations over the containers.
+std::array<nmea::gsv, NMEA_MAX_REPLIES> gsv_set = {}; 
+std::array<nmea::gsv_sat, NMEA_MAX_REPLIES * 4> sat_set = {}; 
 
 void print_t(const nmea::time_t& t) {
     printf("%02i:%02i:%02i.%03i", 
@@ -46,66 +50,29 @@ void print_talker(const nmea::nmea::talker_id& talker_id) {
     }
 }
 
-void test_gll() {
-    valid = gps.ask_gll(reply);
-    if (!valid) { return; }
-    assert(reply.size());
-    nmea::gll o;
-    valid = nmea::gll::from_data(reply, o);
-    printf("GLL source: ");
-    print_talker(o.source);
-    printf(". lat: %f lon: %f, time: ", 
-        o.lat, o.lon);
-    print_t(o.t);
-    printf(".\n");
-    return;
-}
-
-void test_gsv() {
+size_t retrieve_gsv() {
+    unsigned int count; // intentionally uninitialised
     valid = gps.ask_gsv(replies, count);
-    if (!valid) { return; }
-	for(auto r : std::ranges::subrange(replies.begin(), replies.begin() + count)) {
-		nmea::gsv o;
-	    valid = nmea::gsv::from_data(r, o);
-        printf("GSV source: ");
-        print_talker(o.source);
-        printf(".\r\n");
-	    for(const auto s : o.sats) {
-            printf("sat prn: %i, elev: %i, azim: %i, snr: %i.\r\n", 
-                s.prn, s.elev, s.azim, s.snr);
-	    }
+    if (!valid) { return 0; }
+    size_t index = 0;
+	for(const auto& r : std::ranges::subrange(replies.begin(), replies.begin() + count)) {
+        valid = nmea::gsv::from_data(r, gsv_set[index]);
+        if (!valid) {
+            break;
+        }
+        index++;
 	}
-    return;
+    for(auto&& r: std::ranges::subrange(gsv_set.begin() + count, gsv_set.end())) {
+        r = {}; // clean out unused tail of the container
+    }
+    return index;
 }
 
-void test_gga() {
-    valid = gps.ask_gga(reply);
-    if (!valid) { return; }
-    nmea::gga o;
-    valid = nmea::gga::from_data(reply, o);
-    printf("GGA source: ");
-    print_talker(o.source);
-    printf(". lat: %f lon: %f, alt: %.3f, sats: %i. ", 
-        o.lat, o.lon, o.alt, o.sats);
-    print_t(o.t);
-    printf(".\n");
-    return;
-}
 
-void test_rmc() {
-    valid = gps.ask_rmc(reply);
-    if (!valid) { return; }
-    nmea::rmc o;
-    valid = nmea::rmc::from_data(reply, o);
-    printf("RMC source: ");
-    print_talker(o.source);
-    printf(". lat: %f lon: %f. ", 
-        o.lat, o.lon);
-    print_t(o.t);
-    printf(". ");
-    print_d(o.d);
-    printf(".\n");
-    return;
+size_t count_constellations(const nmea::nmea::talker_id source) {
+    size_t i =  std::count_if(gsv_set.begin(), gsv_set.end(),              
+                           [source](const auto& o){ return (o.source == source); });
+    return i;
 }
 
 int main() {
@@ -128,12 +95,29 @@ int main() {
     */
     gps.init();
     
+    
     while (true) {
+        size_t count; // intentionally uninitialised
         printf("+-- start --+\r\n");
-       	test_gll();
-	    test_gsv();
-       	test_gga();
-	    test_rmc();
+	    size_t reply_count = retrieve_gsv();
+
+        count = count_constellations(nmea::nmea::gps);
+        print_talker(nmea::nmea::gps);
+        printf(" count: %i\r\n", count);
+        count = count_constellations(nmea::nmea::glonass);
+        print_talker(nmea::nmea::glonass);
+        printf(" count: %i\r\n", count);
+
+        for(auto o : gsv_set | std::views::filter([](const auto& s){ return s.source != nmea::nmea::notset;})) {
+            auto satellites = o.sats | std::views::filter([](const nmea::gsv_sat& s){ return s.prn != 0;});
+            print_talker(o.source);
+            printf(" sat id: ");
+            for (const auto& s : satellites) {
+              printf(" %i", s.prn);
+            }
+            printf(". \r\n");
+        }
+
         printf("+--  end  --+\r\n\r\n");
         sleep_ms(1000);
     }
