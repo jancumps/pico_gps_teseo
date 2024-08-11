@@ -1,4 +1,5 @@
 #include <string>
+#include <ranges>
 
 #include "teseo_communicate.h"
 #include "reset.h"
@@ -49,10 +50,11 @@ void print_talker(const nmea::nmea::talker_id& talker_id) {
     }
 }
 
-void retrieve_gsv() {
+size_t retrieve_gsv() {
+    unsigned int count; // intentionally uninitialised
     valid = gps.ask_gsv(replies, count);
-    if (!valid) { return; }
-    unsigned int index = 0;
+    if (!valid) { return 0; }
+    size_t index = 0;
 	for(const auto& r : std::ranges::subrange(replies.begin(), replies.begin() + count)) {
         valid = nmea::gsv::from_data(r, gsv_set[index]);
         if (!valid) {
@@ -63,8 +65,7 @@ void retrieve_gsv() {
     for(auto&& r: std::ranges::subrange(gsv_set.begin() + count, gsv_set.end())) {
         r = {}; // clean out unused tail of the container
     }
-
-    return;
+    return index;
 }
 
 
@@ -94,15 +95,28 @@ int main() {
     */
     gps.init();
     
-    size_t count; // intentionally uninitialised
+    
     while (true) {
+        size_t count; // intentionally uninitialised
         printf("+-- start --+\r\n");
-	    retrieve_gsv();
+	    size_t reply_count = retrieve_gsv();
 
         count = count_constellations(nmea::nmea::gps);
-        printf("count of gps: %i\r\n", count);
+        print_talker(nmea::nmea::gps);
+        printf(" count: %i\r\n", count);
         count = count_constellations(nmea::nmea::glonass);
-        printf("count of glonass: %i\r\n", count);
+        print_talker(nmea::nmea::glonass);
+        printf(" count: %i\r\n", count);
+
+        for(auto o : gsv_set | std::views::filter([](const auto& s){ return s.source != nmea::nmea::notset;})) {
+            auto satellites = o.sats | std::views::filter([](const nmea::gsv_sat& s){ return s.prn != 0;});
+            print_talker(o.source);
+            printf(" sat id: ");
+            for (const auto& s : satellites) {
+              printf(" %i", s.prn);
+            }
+            printf(". \r\n");
+        }
 
         printf("+--  end  --+\r\n\r\n");
         sleep_ms(1000);
