@@ -111,15 +111,9 @@ void test_rmc() {
 int main() {
     init();
 
-    gps.getWriteCallback().set([](const std::string& s) -> void {
-        write(s);
-    });
-    gps.getReadCallback().set([](std::string& s) -> void {
-        read(s);
-    });
-    gps.getResetCallback().set([]() -> void {
-        reset();
-    });
+    gps.getWriteCallback().set([](const std::string& s) -> void { write(s); });
+    gps.getReadCallback().set([](std::string& s) -> void { read(s); });
+    gps.getResetCallback().set([]() -> void { reset(); });
 
     /*
     when the teseo is preset for i2c according to AN5203,
