@@ -24,7 +24,6 @@
 #include <string>
 // for std::find
 #include <algorithm>
-
 #include "teseo_communicate.h"
 #include "teseo.h"
 // for debug messages
@@ -34,8 +33,12 @@
 
 teseo::teseo gps;
 std::string reply;
-std::vector<std::string> replies(NMEA_MAX_REPLIES); 
+// for the container that will hold multy-line replies, 
+// you can use an array, vector, list, ...
+// based on what your architecture prefers or requires.
 // vector size is a suggestion. STL will allocate at least NMEA_MAX_REPLIES
+//std::vector<std::string> replies(NMEA_MAX_REPLIES); 
+std::array<std::string, NMEA_MAX_REPLIES> replies; 
 
 int main() {
     init();
