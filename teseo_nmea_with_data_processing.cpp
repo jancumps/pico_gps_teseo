@@ -68,7 +68,6 @@ size_t retrieve_gsv() {
     return index;
 }
 
-
 size_t count_constellations(const nmea::nmea::talker_id source) {
     size_t i =  std::count_if(gsv_set.begin(), gsv_set.end(),              
                            [source](const auto& o){ return (o.source == source); });
@@ -78,23 +77,16 @@ size_t count_constellations(const nmea::nmea::talker_id source) {
 int main() {
     init();
 
-    gps.getWriteCallback().set([](const std::string& s) -> void {
-        write(s);
-    });
-    gps.getReadCallback().set([](std::string& s) -> void {
-        read(s);
-    });
-    gps.getResetCallback().set([]() -> void {
-        reset();
-    });
+    gps.getWriteCallback().set([](const std::string& s) -> void { write(s); });
+    gps.getReadCallback().set([](std::string& s) -> void { read(s); });
+    gps.getResetCallback().set([]() -> void { reset(); });
 
     /*
     when the teseo is preset for i2c according to AN5203,
     init is not required, and you can cut 4s 10ms from the startup sequence
     https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioning-sensor--stmicroelectronics.pdf
     */
-    gps.init();
-    
+    gps.init();    
     
     while (true) {
         size_t count; // intentionally uninitialised
