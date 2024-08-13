@@ -104,14 +104,23 @@ int main() {
         print_talker(nmea::nmea::glonass);
         printf(" count: %i\r\n", count);
 
+        // print satellites
         for(auto o : gsv_set | std::views::filter([](const auto& s){ return s.source != nmea::nmea::notset;})) {
-            auto satellites = o.sats | std::views::filter([](const nmea::gsv_sat& s){ return s.prn != 0;});
             print_talker(o.source);
             printf(" sat id: ");
-            for (const auto& s : satellites) {
-              printf(" %i", s.prn);
+            for (const auto& s : o.sats | std::views::filter([](const nmea::gsv_sat& s){ return s.prn != 0;})) {
+                printf(" %i", s.prn);
             }
             printf(". \r\n");
+        }
+
+        // just print all satellites with their attributes
+        for(auto o : gsv_set | std::views::filter([](const auto& s){ return s.source != nmea::nmea::notset;})) {
+            for (const auto& s : o.sats | std::views::filter([](const nmea::gsv_sat& s){ return s.prn != 0;})) {
+                printf("sat id: %i, elev: %i, azim: %i, snr: %i, source: ", s.prn, s.elev, s.azim, s.snr);
+                print_talker(o.source);
+                printf(".\r\n");
+            }
         }
 
         printf("+--  end  --+\r\n\r\n");
