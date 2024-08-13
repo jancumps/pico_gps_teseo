@@ -12,7 +12,7 @@
 
 teseo::teseo gps;
 // for the container that will hold multy-line replies, 
-// you can use an array, vector, list, ...
+// you can use an array, vector, C array
 // based on what your architecture prefers or requires.
 // vector size is a suggestion. STL will allocate at least NMEA_MAX_REPLIES
 //std::vector<std::string> replies(NMEA_MAX_REPLIES); 
