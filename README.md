@@ -3,6 +3,12 @@
 C++ driver for the ST Teseo-LIV3 GPS module.  
 Port for Rapberry Pico / RP2040, with examples.  
 
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/jancumps/pico_gps_teseo/nightly.yml)
+![GitHub Release](https://img.shields.io/github/v/release/jancumps/pico_gps_teseo)
+[![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/)
+![GitHub License](https://img.shields.io/github/license/jancumps/pico_gps_teseo)
+
+  
 to checkout the full project, *including submodules*:  
 
 ```
