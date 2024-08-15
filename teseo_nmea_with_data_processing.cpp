@@ -1,5 +1,6 @@
 #include <string>
 #include <ranges>
+#include <span>
 
 #include "teseo_communicate.h"
 #include "reset.h"
@@ -16,14 +17,15 @@ teseo::teseo gps;
 // based on what your architecture prefers or requires.
 // vector size is a suggestion. STL will allocate at least NMEA_MAX_REPLIES
 //std::vector<std::string> replies(NMEA_MAX_REPLIES); 
-std::array<std::string, NMEA_MAX_REPLIES> replies; 
+std::array<std::string, NMEA_MAX_REPLIES> replies; // for multi-reply commands
 uint count; // intentionally uninitialised
+std::string reply; // for single reply commands
 bool valid; // intentionally uninitialised
 
 // these array will receive parsed objects. 
 // this example will perform aggregations and calculations over the containers.
 std::array<nmea::gsv, NMEA_MAX_REPLIES> gsv_set = {}; 
-std::array<nmea::gsv_sat, NMEA_MAX_REPLIES * 4> sat_set = {}; 
+nmea::rmc rmc;
 
 void print_t(const nmea::time_t& t) {
     printf("%02i:%02i:%02i.%03i", 
@@ -54,6 +56,14 @@ void print_talker(const nmea::nmea::talker_id& talker_id) {
     }
 }
 
+bool retrieve_rmc() {
+    bool valid; // intentionally uninitialised
+    valid = gps.ask_rmc(reply);
+    if (!valid) { return false; }
+    valid = nmea::rmc::from_data(reply, rmc);
+    return valid;
+}
+
 size_t retrieve_gsv() {
     unsigned int count; // intentionally uninitialised
     valid = gps.ask_gsv(replies, count);
@@ -66,10 +76,11 @@ size_t retrieve_gsv() {
         }
         index++;
 	}
-    for(auto&& r: std::ranges::subrange(gsv_set.begin() + count, gsv_set.end())) {
-        r = {}; // clean out unused tail of the container
-    }
-    return index;
+
+    // clean out unused tail of the container
+    std::for_each( gsv_set.begin() + count, gsv_set.end(), [](auto& o){ o = {}; }); 
+
+    return index;    
 }
 
 size_t count_constellations(const nmea::nmea::talker_id source) {
@@ -95,8 +106,21 @@ int main() {
     while (true) {
         size_t count; // intentionally uninitialised
         printf("+-- start --+\r\n");
-	    size_t reply_count = retrieve_gsv();
 
+	    // gather data
+        retrieve_rmc();
+        retrieve_gsv();
+
+        //print rmc info
+        printf("time: ");
+        print_t(rmc.t);
+        printf("\r\nstatus: %s\r\nlat(n) lon(e): %f %f\r\ndate: ", 
+            rmc.valid? "active" : "void", rmc.lat, rmc.lon);
+        print_d(rmc.d);
+        printf("\r\n");
+
+
+        // aggregate and print data for GPS and GLONASS
         count = count_constellations(nmea::nmea::gps);
         print_talker(nmea::nmea::gps);
         printf(" count: %i\r\n", count);
@@ -114,7 +138,7 @@ int main() {
             printf(". \r\n");
         }
 
-        // just print all satellites with their attributes
+        // print all satellites accross constellations with their attributes
         for(auto o : gsv_set | std::views::filter([](const auto& s){ return s.source != nmea::nmea::notset;})) {
             for (const auto& s : o.sats | std::views::filter([](const nmea::gsv_sat& s){ return s.prn != 0;})) {
                 printf("sat id: %i, elev: %i, azim: %i, snr: %i, source: ", s.prn, s.elev, s.azim, s.snr);
