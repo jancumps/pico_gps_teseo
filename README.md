@@ -21,7 +21,7 @@ goals:
 - NMEA lib can parse NMEA messages.
 - Teseo lib code does not need to know what the target microcontroller is.
 - Teseo lib code does not need to know if the project uses I2C or UART
-- lean, for embedded evelopment.
+- lean, for embedded development.
 - port: protocol functionality (read and write method) are platform specific and need to be provided by the user.
 - Raspberry Pico I2C and UART implementation to prove that it can be done.
 
