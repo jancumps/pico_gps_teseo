@@ -15,12 +15,14 @@ git clone https://github.com/jancumps/pico_gps_teseo.git --recursive
 ```
 
 goals:
-- modular set of libraries that can talk to a Teseo GPS. Replies are C++ objects.
-- knows Teseop interface, and can parse NMEA messages.
+- modular set of libraries that can talk to a Teseo GPS.
+- choose if replies are native NMEA strings or parsed C++ objects.
+- Teseo lib knows Teseo interface and serves NMEA messages in query / response mode.
+- NMEA lib can parse NMEA messages.
 - Teseo lib code does not need to know what the target microcontroller is.
 - Teseo lib code does not need to know if the project uses I2C or UART
-- lean, for embedded evelopment
-- controller and protocol functionality (read and write method) are provided by the user's project code. It has to plug in a reader and writer function.
+- lean, for embedded evelopment.
+- port: protocol functionality (read and write method) are platform specific and need to be provided by the user.
 - Raspberry Pico I2C and UART implementation to prove that it can be done.
 
 1: [Pico and I2C support](https://community.element14.com/technologies/embedded/b/blog/posts/c-library-for-st-teseo-gps---pt-1-pico-and-i2c-support?CommentId=a0dfd5e9-20a5-4ae6-8b1d-723620f2db3f)  
