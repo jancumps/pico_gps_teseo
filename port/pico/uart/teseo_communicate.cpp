@@ -33,24 +33,14 @@ void init() {
 
 void on_uart_rx() {
     uint8_t letter;
-    static uint8_t previousletter;
 
-    if(pBuf == buf) { //* initialise previousletter at each buffer start
-        previousletter = 0;
-    }
     while (uart_is_readable(UART_PORT)) {
         letter = uart_getc(UART_PORT);
         if (bWantChars) {
             pBuf[0] = letter;
-            if (pBuf[0] == '\n') {
-                if (previousletter == '\n') { // two newlines is end of conversation
-                    bWantChars = false;
-                }
-            }
             if (pBuf[0] == 0) {
                 bWantChars = false; // a null read
             }
-            previousletter = letter;
             if ((pBuf - buf) < BUFFSIZE-1) { // if we reach max buffer size, just keep emptying any additional characters in the last position;
                 pBuf++;
             }

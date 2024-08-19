@@ -23,10 +23,9 @@
 // many libraries limit the number of satelites to say 7
 #define BUFFSIZE (70 * MAX_SATELLITE_REPLIES + 60)
 // multiline replies take a while at 9600 baud. 
-// 400 ms is not enough for commands like GPGSV with 7 sattelites
 // the time is dependent on how many sattelites are actually in sight, 
 // not restricted by MAX_SATELLITE_REPLIES
-#define UART_WAITFORREPLY_MS (500)
+#define UART_WAITFORREPLY_MS (380)
 // forward declaration
 void on_uart_rx();
 
