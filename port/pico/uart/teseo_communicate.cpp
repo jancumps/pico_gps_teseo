@@ -11,6 +11,7 @@
 uint8_t buf[BUFFSIZE]; // read buffer, intentionally not initialised
 
 volatile bool bWantChars; // explicitely uninitialised
+volatile absolute_time_t  fail_at;
 int UART_IRQ = UART1_IRQ;
 uint8_t *pBuf; // explicitely uninitialised
 
@@ -33,24 +34,16 @@ void init() {
 
 void on_uart_rx() {
     uint8_t letter;
-    static uint8_t previousletter;
 
-    if(pBuf == buf) { //* initialise previousletter at each buffer start
-        previousletter = 0;
-    }
     while (uart_is_readable(UART_PORT)) {
         letter = uart_getc(UART_PORT);
         if (bWantChars) {
+            fail_at = delayed_by_ms(get_absolute_time(), UART_WAITFORREPLY_MS);
             pBuf[0] = letter;
-            if (pBuf[0] == '\n') {
-                if (previousletter == '\n') { // two newlines is end of conversation
-                    bWantChars = false;
-                }
-            }
+
             if (pBuf[0] == 0) {
                 bWantChars = false; // a null read
             }
-            previousletter = letter;
             if ((pBuf - buf) < BUFFSIZE-1) { // if we reach max buffer size, just keep emptying any additional characters in the last position;
                 pBuf++;
             }
@@ -70,7 +63,7 @@ void read(std::string& s) {
     bWantChars = true;
     // enable the UART to send interrupts - RX only
     uart_set_irq_enables(UART_PORT, true, false);
-    absolute_time_t  fail_at = delayed_by_ms(get_absolute_time(), UART_WAITFORREPLY_MS);
+    fail_at = delayed_by_ms(get_absolute_time(), UART_WAITFORREPLY_MS);
     while (bWantChars){
         if (absolute_time_diff_us(fail_at, get_absolute_time()) >= 0) {
             bWantChars = false; // timeout
