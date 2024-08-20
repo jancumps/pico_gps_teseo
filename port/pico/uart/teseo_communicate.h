@@ -22,10 +22,8 @@
 // calculate 70 characters per nmea replies, + 60 for the status line
 // many libraries limit the number of satelites to say 7
 #define BUFFSIZE (70 * MAX_SATELLITE_REPLIES + 60)
-// multiline replies take a while at 9600 baud. 
-// the time is dependent on how many sattelites are actually in sight, 
-// not restricted by MAX_SATELLITE_REPLIES
-#define UART_WAITFORREPLY_MS (380)
+// how long to wait for a single character before timing out
+#define UART_WAITFORREPLY_MS (40)
 // forward declaration
 void on_uart_rx();
 

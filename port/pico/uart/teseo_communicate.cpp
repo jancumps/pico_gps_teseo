@@ -11,6 +11,7 @@
 uint8_t buf[BUFFSIZE]; // read buffer, intentionally not initialised
 
 volatile bool bWantChars; // explicitely uninitialised
+volatile absolute_time_t  fail_at;
 int UART_IRQ = UART1_IRQ;
 uint8_t *pBuf; // explicitely uninitialised
 
@@ -37,7 +38,9 @@ void on_uart_rx() {
     while (uart_is_readable(UART_PORT)) {
         letter = uart_getc(UART_PORT);
         if (bWantChars) {
+            fail_at = delayed_by_ms(get_absolute_time(), UART_WAITFORREPLY_MS);
             pBuf[0] = letter;
+
             if (pBuf[0] == 0) {
                 bWantChars = false; // a null read
             }
@@ -60,7 +63,7 @@ void read(std::string& s) {
     bWantChars = true;
     // enable the UART to send interrupts - RX only
     uart_set_irq_enables(UART_PORT, true, false);
-    absolute_time_t  fail_at = delayed_by_ms(get_absolute_time(), UART_WAITFORREPLY_MS);
+    fail_at = delayed_by_ms(get_absolute_time(), UART_WAITFORREPLY_MS);
     while (bWantChars){
         if (absolute_time_diff_us(fail_at, get_absolute_time()) >= 0) {
             bWantChars = false; // timeout
