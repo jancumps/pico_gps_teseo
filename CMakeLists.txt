@@ -48,118 +48,48 @@ target_include_directories(${CMAKE_PROJECT_NAME}_shared_i2c PUBLIC
 target_link_libraries(${CMAKE_PROJECT_NAME}_shared_i2c 
         pico_stdlib hardware_gpio hardware_i2c
 )
-# teseo reply response example --------------------------------------
 
-add_executable(${CMAKE_PROJECT_NAME}_reply_response_uart
-        ${CMAKE_CURRENT_SOURCE_DIR}/teseo_reply_response.cpp
-)
+# ---------------------------------------------------
 
-target_link_libraries(${CMAKE_PROJECT_NAME}_reply_response_uart 
-        ${CMAKE_PROJECT_NAME}_shared_uart
-)
+# build firmware macro
+macro(__build_firmware example protocol)
+message("building firmware for example ${example}, protocol ${protocol}")
 
-target_include_directories(${CMAKE_PROJECT_NAME}_reply_response_uart PUBLIC 
-)
-
-# select the debug output (not used by the GPS interface)
-pico_enable_stdio_uart(${CMAKE_PROJECT_NAME}_reply_response_uart 1)
-pico_enable_stdio_usb(${CMAKE_PROJECT_NAME}_reply_response_uart 0)
-
-pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_reply_response_uart )
-
-add_executable(${CMAKE_PROJECT_NAME}_reply_response_i2c
-        ${CMAKE_CURRENT_SOURCE_DIR}/teseo_reply_response.cpp
-)
-
-target_link_libraries(${CMAKE_PROJECT_NAME}_reply_response_i2c 
-        ${CMAKE_PROJECT_NAME}_shared_i2c
-)
-
-target_include_directories(${CMAKE_PROJECT_NAME}_reply_response_i2c PUBLIC 
-)
-
-# select the debug output (not used by the GPS interface)
-pico_enable_stdio_uart(${CMAKE_PROJECT_NAME}_reply_response_i2c 1)
-pico_enable_stdio_usb(${CMAKE_PROJECT_NAME}_reply_response_i2c 0)
-
-pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_reply_response_i2c )
-
-# nmea parse example --------------------------------------
-
-add_executable(${CMAKE_PROJECT_NAME}_with_nmea_parse_uart
-        ${CMAKE_CURRENT_SOURCE_DIR}/teseo_with_nmea_parse.cpp
+add_executable(${CMAKE_PROJECT_NAME}_${example}_${protocol}
+        ${CMAKE_CURRENT_SOURCE_DIR}/teseo_${example}.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp       
 )
 
-target_link_libraries(${CMAKE_PROJECT_NAME}_with_nmea_parse_uart 
-        ${CMAKE_PROJECT_NAME}_shared_uart
+target_link_libraries(${CMAKE_PROJECT_NAME}_${example}_${protocol} 
+        ${CMAKE_PROJECT_NAME}_shared_${protocol}
 )
 
-target_include_directories(${CMAKE_PROJECT_NAME}_with_nmea_parse_uart PUBLIC 
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea
-)
-
-# select the debug output (not used by the GPS interface)
-pico_enable_stdio_uart(${CMAKE_PROJECT_NAME}_with_nmea_parse_uart 1)
-pico_enable_stdio_usb(${CMAKE_PROJECT_NAME}_with_nmea_parse_uart 0)
-
-pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_with_nmea_parse_uart )
-
-add_executable(${CMAKE_PROJECT_NAME}_with_nmea_parse_i2c
-        ${CMAKE_CURRENT_SOURCE_DIR}/teseo_with_nmea_parse.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp       
-)
-
-target_link_libraries(${CMAKE_PROJECT_NAME}_with_nmea_parse_i2c 
-        ${CMAKE_PROJECT_NAME}_shared_i2c
-)
-
-target_include_directories(${CMAKE_PROJECT_NAME}_with_nmea_parse_i2c PUBLIC 
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea
+target_include_directories(${CMAKE_PROJECT_NAME}_${example}_${protocol} PUBLIC 
+${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea
 )
 
 # select the debug output (not used by the GPS interface)
-pico_enable_stdio_uart(${CMAKE_PROJECT_NAME}_with_nmea_parse_i2c 1)
-pico_enable_stdio_usb(${CMAKE_PROJECT_NAME}_with_nmea_parse_i2c 0)
+pico_enable_stdio_uart(${CMAKE_PROJECT_NAME}_${example}_${protocol} 1)
+pico_enable_stdio_usb(${CMAKE_PROJECT_NAME}_${example}_${protocol} 0)
 
-pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_with_nmea_parse_i2c )
+pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_${example}_${protocol} )
 
-# nmea with data processing example --------------------------------------
+endmacro()
 
-add_executable(${CMAKE_PROJECT_NAME}_nmea_with_data_processing_uart
-        ${CMAKE_CURRENT_SOURCE_DIR}/teseo_nmea_with_data_processing.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp       
-)
+# build teseo reply response example --------------------------------------
 
-target_link_libraries(${CMAKE_PROJECT_NAME}_nmea_with_data_processing_uart 
-        ${CMAKE_PROJECT_NAME}_shared_uart
-)
+__build_firmware("reply_response" "uart")
 
-target_include_directories(${CMAKE_PROJECT_NAME}_nmea_with_data_processing_uart PUBLIC 
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea
-)
+__build_firmware("reply_response" "i2c")
 
-# select the debug output (not used by the GPS interface)
-pico_enable_stdio_uart(${CMAKE_PROJECT_NAME}_nmea_with_data_processing_uart 1)
-pico_enable_stdio_usb(${CMAKE_PROJECT_NAME}_nmea_with_data_processing_uart 0)
+# build nmea parse example --------------------------------------
 
-pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_nmea_with_data_processing_uart )
+__build_firmware("with_nmea_parse" "uart")
 
-add_executable(${CMAKE_PROJECT_NAME}_nmea_with_data_processing_i2c
-        ${CMAKE_CURRENT_SOURCE_DIR}/teseo_nmea_with_data_processing.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp       
-)
+__build_firmware("with_nmea_parse" "i2c")
 
-target_link_libraries(${CMAKE_PROJECT_NAME}_nmea_with_data_processing_i2c 
-        ${CMAKE_PROJECT_NAME}_shared_i2c
-)
+# build nmea with data processing example --------------------------------------
 
-target_include_directories(${CMAKE_PROJECT_NAME}_nmea_with_data_processing_i2c PUBLIC 
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea
-)
+__build_firmware("nmea_with_data_processing" "uart")
 
-# select the debug output (not used by the GPS interface)
-pico_enable_stdio_uart(${CMAKE_PROJECT_NAME}_nmea_with_data_processing_i2c 1)
-pico_enable_stdio_usb(${CMAKE_PROJECT_NAME}_nmea_with_data_processing_i2c 0)
-
-pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_nmea_with_data_processing_i2c )
+__build_firmware("nmea_with_data_processing" "i2c")
