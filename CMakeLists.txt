@@ -52,7 +52,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}_shared_i2c
         pico_stdlib hardware_gpio hardware_i2c
 )
 
-# build firmware macro
+# macro to build firmware binary for the examples
 macro(__build_firmware example protocol)
 message("building firmware for example ${example}, protocol ${protocol}")
 
