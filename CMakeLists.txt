@@ -13,6 +13,9 @@ set(CMAKE_CXX_STANDARD 23)
 
 pico_sdk_init()
 
+# libraries and shared resources
+# ------------------------------
+
 # sources shared by all examples with uart
 add_library(${CMAKE_PROJECT_NAME}_shared_uart
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo.cpp
@@ -49,8 +52,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME}_shared_i2c
         pico_stdlib hardware_gpio hardware_i2c
 )
 
-# ---------------------------------------------------
-
 # build firmware macro
 macro(__build_firmware example protocol)
 message("building firmware for example ${example}, protocol ${protocol}")
@@ -68,13 +69,16 @@ target_include_directories(${CMAKE_PROJECT_NAME}_${example}_${protocol} PUBLIC
 ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea
 )
 
-# select the debug output (not used by the GPS interface)
+# select the debug output (optional, not used by the GPS interface)
 pico_enable_stdio_uart(${CMAKE_PROJECT_NAME}_${example}_${protocol} 1)
 pico_enable_stdio_usb(${CMAKE_PROJECT_NAME}_${example}_${protocol} 0)
 
 pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_${example}_${protocol} )
 
 endmacro()
+
+# build the examples
+# ------------------
 
 # build teseo reply response example --------------------------------------
 
