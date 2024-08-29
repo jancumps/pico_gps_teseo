@@ -19,6 +19,7 @@ pico_sdk_init()
 # sources shared by all examples with uart
 add_library(${CMAKE_PROJECT_NAME}_shared_uart
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp       
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/uart/teseo_communicate.cpp
 )
@@ -26,6 +27,7 @@ add_library(${CMAKE_PROJECT_NAME}_shared_uart
 target_include_directories(${CMAKE_PROJECT_NAME}_shared_uart PUBLIC 
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/callbackmanager
+        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/uart
 )
@@ -37,6 +39,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}_shared_uart  PUBLIC
 # sources shared by all examples with i2c
 add_library(${CMAKE_PROJECT_NAME}_shared_i2c
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp       
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/i2c/teseo_communicate.cpp
 )
@@ -44,6 +47,7 @@ add_library(${CMAKE_PROJECT_NAME}_shared_i2c
 target_include_directories(${CMAKE_PROJECT_NAME}_shared_i2c PUBLIC 
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/callbackmanager
+        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/i2c
 )
@@ -58,7 +62,6 @@ message("building firmware for example ${example}, protocol ${protocol}")
 
 add_executable(${CMAKE_PROJECT_NAME}_${example}_${protocol}
         ${CMAKE_CURRENT_SOURCE_DIR}/teseo_${example}.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp       
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME}_${example}_${protocol} 
@@ -66,7 +69,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME}_${example}_${protocol}
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME}_${example}_${protocol} PUBLIC 
-${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea
 )
 
 # select the debug output (optional, not used by the GPS interface)
