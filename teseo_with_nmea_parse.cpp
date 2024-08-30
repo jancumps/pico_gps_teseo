@@ -33,15 +33,15 @@ void print_d(const std::chrono::year_month_day& t) {
         t.day());
 }
 
-void print_talker(const nmea::nmea::talker_id& talker_id) {
+void print_talker(const nmea::talker_id& talker_id) {
     switch (talker_id) {
-    case nmea::nmea::gps:
+    case nmea::talker_id::gps:
         printf("gps");
         break;
-    case nmea::nmea::glonass:
+    case nmea::talker_id::glonass:
         printf("glonass");
         break;
-    case nmea::nmea::galileo:
+    case nmea::talker_id::galileo:
         printf("galileo");
         break;
     default:

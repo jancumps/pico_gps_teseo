@@ -39,15 +39,15 @@ void print_d(const std::chrono::year_month_day& t) {
         t.day());
 }
 
-void print_talker(const nmea::nmea::talker_id& talker_id) {
+void print_talker(const nmea::talker_id& talker_id) {
     switch (talker_id) {
-    case nmea::nmea::gps:
+    case nmea::talker_id::gps:
         printf("gps");
         break;
-    case nmea::nmea::glonass:
+    case nmea::talker_id::glonass:
         printf("glonass");
         break;
-    case nmea::nmea::galileo:
+    case nmea::talker_id::galileo:
         printf("galileo");
         break;
     default:
@@ -83,7 +83,7 @@ size_t retrieve_gsv() {
     return index;    
 }
 
-size_t count_constellations(const nmea::nmea::talker_id source) {
+size_t count_constellations(const nmea::talker_id source) {
     size_t i =  std::count_if(gsv_set.begin(), gsv_set.end(),              
                            [source](const auto& o){ return (o.source == source); });
     return i;
@@ -121,15 +121,15 @@ int main() {
 
 
         // aggregate and print data for GPS and GLONASS
-        count = count_constellations(nmea::nmea::gps);
-        print_talker(nmea::nmea::gps);
+        count = count_constellations(nmea::talker_id::gps);
+        print_talker(nmea::talker_id::gps);
         printf(" count: %i\r\n", count);
-        count = count_constellations(nmea::nmea::glonass);
-        print_talker(nmea::nmea::glonass);
+        count = count_constellations(nmea::talker_id::glonass);
+        print_talker(nmea::talker_id::glonass);
         printf(" count: %i\r\n", count);
 
         // print satellites
-        for(auto o : gsv_set | std::views::filter([](const auto& s){ return s.source != nmea::nmea::notset;})) {
+        for(auto o : gsv_set | std::views::filter([](const auto& s){ return s.source != nmea::talker_id::notset;})) {
             print_talker(o.source);
             printf(" sat id: ");
             for (const auto& s : o.sats | std::views::filter([](const nmea::gsv_sat& s){ return s.prn != 0;})) {
@@ -139,7 +139,7 @@ int main() {
         }
 
         // print all satellites accross constellations with their attributes
-        for(auto o : gsv_set | std::views::filter([](const auto& s){ return s.source != nmea::nmea::notset;})) {
+        for(auto o : gsv_set | std::views::filter([](const auto& s){ return s.source != nmea::talker_id::notset;})) {
             for (const auto& s : o.sats | std::views::filter([](const nmea::gsv_sat& s){ return s.prn != 0;})) {
                 printf("sat id: %i, elev: %i, azim: %i, snr: %i, source: ", s.prn, s.elev, s.azim, s.snr);
                 print_talker(o.source);
