@@ -26,7 +26,7 @@
 // many libraries limit the number of satelites to say 6
 #define NMEA_MAX_REPLIES (MAX_SATELLITE_REPLIES)
 
-void init();
+void initialize();
 void write(const std::string& s);
 void read(std::string& s);
 
