@@ -15,7 +15,7 @@ volatile absolute_time_t  fail_at;
 int UART_IRQ = UART1_IRQ;
 uint8_t *pBuf; // explicitely uninitialised
 
-void init() {
+void initialize() {
     stdio_init_all();
     uart_init(UART_PORT, UART_BAUD);
     uart_set_fifo_enabled(UART_PORT, false);

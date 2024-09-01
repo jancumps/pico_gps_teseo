@@ -33,6 +33,6 @@ void on_uart_rx();
 
 void write(const std::string& s);
 void read(std::string& s);
-void init();
+void initialize();
 
 #endif // TESEO_COMMUNICATE_H_

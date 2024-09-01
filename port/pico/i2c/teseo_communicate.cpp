@@ -10,7 +10,7 @@
 
 uint8_t buf[BUFFSIZE]; // read buffer, intentionally not initialised
 
-void init() {
+void initialize() {
     stdio_init_all();
     // I2C is "open drain", pull ups to keep signal high when no data is being sent 
     // (not needed. board has pullups)

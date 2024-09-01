@@ -42,7 +42,7 @@ std::string reply;
 std::array<std::string, NMEA_MAX_REPLIES> replies; 
 
 int main() {
-    init();
+    initialize();
 
     gps.writer().set([](const std::string& s) -> void { write(s); });
     gps.reader().set([](std::string& s) -> void { read(s); });
@@ -53,7 +53,7 @@ int main() {
     init is not required, and you can cut 4s 10ms from the startup sequence
     https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioning-sensor--stmicroelectronics.pdf
     */
-    gps.init();
+    gps.initialize();
     
     uint count; // intentionally uninitialised
     bool valid; // intentionally uninitialised
