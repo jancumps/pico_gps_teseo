@@ -89,8 +89,8 @@ void test_gga() {
     valid = nmea::gga::from_data(reply, o);
     printf("GGA source: ");
     print_talker(o.source);
-    printf(". lat: %f lon: %f, alt: %.3f, sats: %i. ", 
-        o.lat, o.lon, o.alt, o.sats);
+    printf(". lat: %f lon: %f, alt: %.3f, geosep: %.3f, sats: %i. ", 
+        o.lat, o.lon, o.alt, o.geosep, o.sats);
     print_t(o.t);
     printf(".\n");
     return;
