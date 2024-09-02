@@ -22,7 +22,7 @@ uint count; // intentionally uninitialised
 std::string reply; // for single reply commands
 bool valid; // intentionally uninitialised
 
-// these array will receive parsed objects. 
+// this array will receive parsed objects. 
 // this example will perform aggregations and calculations over the containers.
 std::array<nmea::gsv, NMEA_MAX_REPLIES> gsv_set = {}; 
 nmea::rmc rmc;
