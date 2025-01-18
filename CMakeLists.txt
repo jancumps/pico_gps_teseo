@@ -9,7 +9,7 @@ include(pico_sdk_import.cmake)
 project(pico_gps_teseo C CXX ASM)
 
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 26)
 
 pico_sdk_init()
 
