@@ -37,7 +37,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get install ninja_build
+          sudo apt-get install ninja-build
 
           sudo apt-get install cmake
 
