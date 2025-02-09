@@ -37,7 +37,10 @@ jobs:
 
       - name: Install dependencies
         run: |
+          sudo apt-get install ninja_build
+
           sudo apt-get install cmake
+
           # install gcc cross-compile for ARM v 13.3.1
           curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/13.3.rel1/binrel/arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi.tar.xz"
           sudo mkdir /opt/gcc-arm-none-eabi
