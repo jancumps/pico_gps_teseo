@@ -1,15 +1,16 @@
 #include <string>
 #include <ranges>
 #include <span>
+#include <chrono>
 
 #include "teseo_communicate.h"
 #include "reset.h"
-#include "teseo.h"
 // for debug messages
 #include <stdio.h>
 #include "pico/stdlib.h"
 
-#include "nmea.h"
+import teseo;
+import nmea;
 
 teseo::teseo gps;
 // for the container that will hold multy-line replies, 

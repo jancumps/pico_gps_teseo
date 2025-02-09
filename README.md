@@ -30,3 +30,5 @@ goals:
 
 Raspberry Pico specific code sits in the port/pico folder.  
 Latest development binaries are available on the [nightly release](https://github.com/jancumps/pico_gps_teseo/releases/tag/nightly_development).
+
+Requires a toolchain that supports C++ modules. Tested with CMake 3.26 and GCC 14.2.1

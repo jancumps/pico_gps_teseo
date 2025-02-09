@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.28)
 
 set(PICO_DEOPTIMIZED_DEBUG 1)
 
@@ -10,6 +10,8 @@ project(pico_gps_teseo C CXX ASM)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 26)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules-ts")
+set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API "2182bf5c-ef0d-489a-91da-49dbc3090d2a")
 
 pico_sdk_init()
 
@@ -17,42 +19,54 @@ pico_sdk_init()
 # ------------------------------
 
 # sources shared by all examples with uart
-add_library(${CMAKE_PROJECT_NAME}_shared_uart
+add_library(${CMAKE_PROJECT_NAME}_shared_uart)
+target_sources(${CMAKE_PROJECT_NAME}_shared_uart
+        PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp       
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/uart/teseo_communicate.cpp
 )
+target_sources(${CMAKE_PROJECT_NAME}_shared_uart
+PUBLIC
+        FILE_SET cxx_modules TYPE CXX_MODULES FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/callbackmanager/callbackmanager.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo_iface.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea_iface.cpp       
+)
 
-target_include_directories(${CMAKE_PROJECT_NAME}_shared_uart PUBLIC 
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/callbackmanager
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea
+target_include_directories(${CMAKE_PROJECT_NAME}_shared_uart PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/uart
 )
 
-target_link_libraries(${CMAKE_PROJECT_NAME}_shared_uart  PUBLIC
+target_link_libraries(${CMAKE_PROJECT_NAME}_shared_uart
         pico_stdlib hardware_gpio hardware_uart
 )
 
 # sources shared by all examples with i2c
-add_library(${CMAKE_PROJECT_NAME}_shared_i2c
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo.cpp
+add_library(${CMAKE_PROJECT_NAME}_shared_i2c)
+target_sources(${CMAKE_PROJECT_NAME}_shared_i2c
+PUBLIC
+${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp       
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/i2c/teseo_communicate.cpp
 )
+target_sources(${CMAKE_PROJECT_NAME}_shared_i2c
+PUBLIC
+FILE_SET cxx_modules TYPE CXX_MODULES FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/callbackmanager/callbackmanager.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo_iface.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea_iface.cpp       
+)
 
-target_include_directories(${CMAKE_PROJECT_NAME}_shared_i2c PUBLIC 
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/callbackmanager
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea
+target_include_directories(${CMAKE_PROJECT_NAME}_shared_i2c PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/i2c
 )
 
-target_link_libraries(${CMAKE_PROJECT_NAME}_shared_i2c 
+target_link_libraries(${CMAKE_PROJECT_NAME}_shared_i2c
         pico_stdlib hardware_gpio hardware_i2c
 )
 
@@ -64,7 +78,7 @@ add_executable(${CMAKE_PROJECT_NAME}_${example}_${protocol}
         ${CMAKE_CURRENT_SOURCE_DIR}/teseo_${example}.cpp
 )
 
-target_link_libraries(${CMAKE_PROJECT_NAME}_${example}_${protocol} 
+target_link_libraries(${CMAKE_PROJECT_NAME}_${example}_${protocol} PUBLIC 
         ${CMAKE_PROJECT_NAME}_shared_${protocol}
 )
 
