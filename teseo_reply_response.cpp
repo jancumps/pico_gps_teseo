@@ -26,11 +26,12 @@
 // for std::find
 #include <algorithm>
 #include "teseo_communicate.h"
-#include "teseo.h"
 // for debug messages
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "reset.h"
+
+import teseo;
 
 teseo::teseo gps;
 std::string reply;
