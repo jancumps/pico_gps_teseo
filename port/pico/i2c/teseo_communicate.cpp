@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include <algorithm>
-#include "reset.h"
 
+import port_pico;
 
 uint8_t buf[BUFFSIZE]; // read buffer, intentionally not initialised
 
@@ -20,9 +20,7 @@ void initialize() {
     // gpio_pull_up(I2C_SDA);
     // gpio_pull_up(I2C_SCL);
     
-    gpio_init(RESET_PIN);
-    gpio_put(RESET_PIN, 1);
-    gpio_set_dir(RESET_PIN, GPIO_OUT);    
+    port_pico::reset_initialize();    
 }
 
 void write(const std::string& s) {
