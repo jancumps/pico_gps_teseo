@@ -24,20 +24,18 @@ target_sources(${CMAKE_PROJECT_NAME}_shared_uart
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp       
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/uart/teseo_communicate.cpp
 )
 target_sources(${CMAKE_PROJECT_NAME}_shared_uart
-PUBLIC
+        PUBLIC
         FILE_SET cxx_modules TYPE CXX_MODULES FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/callbackmanager/callbackmanager.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo_iface.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea_iface.cpp       
+        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/uart/teseo_communicate.cpp
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME}_shared_uart PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/uart
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME}_shared_uart
@@ -47,23 +45,21 @@ target_link_libraries(${CMAKE_PROJECT_NAME}_shared_uart
 # sources shared by all examples with i2c
 add_library(${CMAKE_PROJECT_NAME}_shared_i2c)
 target_sources(${CMAKE_PROJECT_NAME}_shared_i2c
-PUBLIC
-${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo.cpp
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp       
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/i2c/teseo_communicate.cpp
 )
 target_sources(${CMAKE_PROJECT_NAME}_shared_i2c
-PUBLIC
-FILE_SET cxx_modules TYPE CXX_MODULES FILES
+        PUBLIC
+        FILE_SET cxx_modules TYPE CXX_MODULES FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/callbackmanager/callbackmanager.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo_iface.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea_iface.cpp       
+        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/i2c/teseo_communicate.cpp
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME}_shared_i2c PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/i2c
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME}_shared_i2c

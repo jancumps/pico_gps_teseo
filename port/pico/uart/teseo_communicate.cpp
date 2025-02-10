@@ -1,12 +1,47 @@
-#include "teseo_communicate.h"
+module;
+
+// for debug messages
+#include <string>
 // for memset
 #include <cstring>
 #include "hardware/gpio.h"
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include <algorithm>
-#include "reset.h"
 #include "hardware/regs/intctrl.h"
+
+
+export module port_pico_communicate;
+
+import port_pico_reset;
+
+
+// for the moment, the library restricts how many sattelites it entertains.
+// it influences the size of the read buffer (not a drama, this is a static buffer)
+// it also influences the size of the vector that will accept replies that are "per sattelite"
+// Currently, the code does not allow that the vector that holds these, grows (focus on embedded)
+// later, this can be changed to allow flex, if you accept the dynamic 
+// memory growth impact (acceptable for larger systems like PC, processors, ...)
+#define MAX_SATELLITE_REPLIES 7
+
+#include "hardware/uart.h"
+#include <cassert>
+#define UART_PORT (uart1)
+#define UART_BAUD (9600)
+#define UART_TX (4)
+#define UART_RX (5)
+// multiline replies take decent buffer size
+// calculate 70 characters per nmea replies, + 60 for the status line
+// many libraries limit the number of satelites to say 7
+#define BUFFSIZE (70 * MAX_SATELLITE_REPLIES + 60)
+// how long to wait for a single character before timing out
+#define UART_WAITFORREPLY_MS (40)
+// forward declaration
+void on_uart_rx();
+
+// calculate 70 characters per satellite, + 60 for the status line
+// many libraries limit the number of satelites to say 6
+export const size_t NMEA_MAX_REPLIES  = MAX_SATELLITE_REPLIES;
 
 uint8_t buf[BUFFSIZE]; // read buffer, intentionally not initialised
 
@@ -15,7 +50,7 @@ volatile absolute_time_t  fail_at;
 int UART_IRQ = UART1_IRQ;
 uint8_t *pBuf; // explicitely uninitialised
 
-void initialize() {
+export void initialize() {
     stdio_init_all();
     uart_init(UART_PORT, UART_BAUD);
     uart_set_fifo_enabled(UART_PORT, false);
@@ -27,9 +62,7 @@ void initialize() {
     // by default all UART interrupts off
     uart_set_irq_enables(UART_PORT, false, false);
     
-    gpio_init(RESET_PIN);
-    gpio_put(RESET_PIN, 1);
-    gpio_set_dir(RESET_PIN, GPIO_OUT); 
+    port_pico::reset_initialize();
 }
 
 void on_uart_rx() {
@@ -52,12 +85,12 @@ void on_uart_rx() {
     }
 }
 
-void write(const std::string& s) {
+export void write(const ::std::string& s) {
     uart_write_blocking(UART_PORT, reinterpret_cast<const uint8_t*>(s.c_str()), s.length() +1);
     return;  
 }
 
-void read(std::string& s) {
+export void read(::std::string& s) {
     memset (buf, 0, BUFFSIZE);  // initialise buffer before reading
     pBuf = buf;
     bWantChars = true;
