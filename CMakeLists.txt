@@ -24,7 +24,6 @@ target_sources(${CMAKE_PROJECT_NAME}_shared_uart
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp       
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/uart/teseo_communicate.cpp
 )
 target_sources(${CMAKE_PROJECT_NAME}_shared_uart
         PUBLIC
@@ -32,11 +31,11 @@ target_sources(${CMAKE_PROJECT_NAME}_shared_uart
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/callbackmanager/callbackmanager.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo_iface.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea_iface.cpp       
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset_iface.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/uart/teseo_communicate.cpp
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME}_shared_uart PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/uart
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME}_shared_uart
@@ -49,7 +48,6 @@ target_sources(${CMAKE_PROJECT_NAME}_shared_i2c
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea.cpp       
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/i2c/teseo_communicate.cpp
 )
 target_sources(${CMAKE_PROJECT_NAME}_shared_i2c
         PUBLIC
@@ -57,11 +55,11 @@ target_sources(${CMAKE_PROJECT_NAME}_shared_i2c
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/callbackmanager/callbackmanager.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo_iface.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea_iface.cpp       
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset_iface.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/i2c/teseo_communicate.cpp
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME}_shared_i2c PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/i2c
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME}_shared_i2c

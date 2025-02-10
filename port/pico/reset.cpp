@@ -1,11 +1,12 @@
 module;
 
-export module port_pico;
+#include "hardware/gpio.h"
+#include "pico/stdlib.h"
+
+export module port_pico_reset;
 
 export namespace port_pico {
 
-    #include "hardware/gpio.h"
-#include "pico/stdlib.h"
 
 #define RESET_PIN (18)
 #define RESET_APPLY_MS (1)

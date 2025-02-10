@@ -25,13 +25,13 @@
 #include <string>
 // for std::find
 #include <algorithm>
-#include "teseo_communicate.h"
 // for debug messages
 #include <stdio.h>
 #include "pico/stdlib.h"
 
 import teseo;
-import port_pico;
+import port_pico_reset;
+import port_pico_communicate;
 
 teseo::teseo gps;
 std::string reply;

@@ -3,14 +3,14 @@
 #include <span>
 #include <chrono>
 
-#include "teseo_communicate.h"
 // for debug messages
 #include <stdio.h>
 #include "pico/stdlib.h"
 
 import teseo;
 import nmea;
-import port_pico;
+import port_pico_reset;
+import port_pico_communicate;
 
 teseo::teseo gps;
 // for the container that will hold multy-line replies, 
