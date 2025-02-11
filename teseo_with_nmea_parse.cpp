@@ -1,13 +1,15 @@
 #include <string>
 #include <chrono>
 
-#include "teseo_communicate.h"
-#include "reset.h"
 // for debug messages
 #include <stdio.h>
 #include "pico/stdlib.h"
+
 import teseo;
 import nmea;
+import port_pico_reset;
+import port_pico_communicate;
+
 
 teseo::teseo gps;
 std::string reply;
@@ -116,7 +118,7 @@ int main() {
 
     gps.writer().set([](const std::string& s) -> void { write(s); });
     gps.reader().set([](std::string& s) -> void { read(s); });
-    gps.resetter().set([]() -> void { reset(); });
+    gps.resetter().set([]() -> void { port_pico::reset(); });
 
     /*
     when the teseo is preset for i2c according to AN5203,
