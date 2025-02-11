@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 
+// module imports
 import teseo;
 import port_pico_reset;
 import port_pico_communicate;
