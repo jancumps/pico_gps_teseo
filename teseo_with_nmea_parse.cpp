@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 
+// module imports
 import teseo;
 import nmea;
 import port_pico_reset;
