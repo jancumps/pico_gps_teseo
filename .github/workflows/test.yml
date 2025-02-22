@@ -36,7 +36,9 @@ jobs:
           sudo add-apt-repository universe
           sudo apt update
           sudo apt install gcc-14
-          ls -lrta /usr/local/gcc*
+          ls -lrta /usr/local/
+          sudo update-alternatives --remove-all gcc
+          sudo update-alternatives --remove-all g++
           sudo update-alternatives --install /usr/bin/g++ g++ /usr/local/gcc-14.2.0/bin/g++14.2.0 14
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/local/gcc-14.2.0/bin/gcc14.2.0 14
           
