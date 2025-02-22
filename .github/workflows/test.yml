@@ -57,5 +57,6 @@ jobs:
         shell: bash
         run: |
           cd build
-          make test
+          chmod +x ./test_class_module
+          ./test_class_module
           cd ..
