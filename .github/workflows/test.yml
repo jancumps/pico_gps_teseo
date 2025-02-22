@@ -35,7 +35,8 @@ jobs:
           sudo apt-get install cmake
           sudo add-apt-repository universe
           sudo apt update
-          sudo apt install gcc-14.2.0
+          sudo apt install gcc-14
+          ls -lrta /usr/local/gcc*
           sudo update-alternatives --install /usr/bin/g++ g++ /usr/local/gcc-14.2.0/bin/g++14.2.0 14
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/local/gcc-14.2.0/bin/gcc14.2.0 14
           
