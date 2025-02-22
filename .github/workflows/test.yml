@@ -26,6 +26,7 @@ jobs:
         with:
           path: test_gps_teseo
           submodules: true
+          repository: jancumps/test_gps_teseo
 
       - name: Install dependencies
         run: |
