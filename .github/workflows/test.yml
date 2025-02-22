@@ -1,0 +1,67 @@
+name: Build on ubuntu against pico-sdk develop
+on:
+  workflow_dispatch:
+  #push:
+  #  branches:
+  #    - 'develop'
+  #    - 'main'
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - 'develop'
+      - 'main'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean workspace
+        run: |
+          echo "Cleaning up previous run"
+          rm -rf "${{ github.workspace }}"
+          mkdir -p "${{ github.workspace }}"
+
+      - name: Checkout test_gps_teseo
+        uses: actions/checkout@v4
+        with:
+          path: test_gps_teseo
+          submodules: true
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install ninja-build
+
+          sudo apt-get install cmake
+
+          # install gcc cross-compile for ARM v 14.2.1
+          curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/14.2.rel1/binrel/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi.tar.xz"
+          sudo mkdir /opt/gcc-arm-none-eabi
+          sudo tar xf gcc-arm-none-eabi.tar.xz --strip-components=1 -C /opt/gcc-arm-none-eabi
+          echo 'export PATH=$PATH:/opt/gcc-arm-none-eabi/bin' | sudo tee -a /etc/profile.d/gcc-arm-none-eabi.sh
+          export PATH=$PATH:/opt/gcc-arm-none-eabi/bin
+          export PICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin
+          source /etc/profile
+          ls -lrta /opt/gcc-arm-none-eabi/bin
+          arm-none-eabi-c++ --version
+          
+          # sudo apt install gcc-arm-none-eabi
+
+      - name: Build Project
+        working-directory: ${{github.workspace}}/test_gps_teseo
+        shell: bash
+        run: |
+          echo ${{ github.ref }}
+          mkdir build
+          cd build
+          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-g++ -DPICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
+          cmake --build .
+          cd ..
+          ls -lrt build/*.uf2
+
+      - name: Test Project
+        working-directory: ${{github.workspace}}/test_gps_teseo
+        shell: bash
+        run: |
+          cd build
+          cmake --test .
+          cd ..
