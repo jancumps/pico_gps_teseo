@@ -1,4 +1,4 @@
-name: Build on ubuntu against pico-sdk develop
+name: run unit tests of the teseo and nmea libs
 on:
   workflow_dispatch:
   #push:
