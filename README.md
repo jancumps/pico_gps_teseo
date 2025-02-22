@@ -7,6 +7,7 @@ Port for Rapberry Pico / RP2040, with examples.
 ![GitHub Release](https://img.shields.io/github/v/release/jancumps/pico_gps_teseo)
 [![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/)
 ![GitHub License](https://img.shields.io/github/license/jancumps/pico_gps_teseo?label=licence)
+[![run unit tests of the teseo and nmea libs](https://github.com/jancumps/pico_gps_teseo/actions/workflows/test.yml/badge.svg)](https://github.com/jancumps/pico_gps_teseo/actions/workflows/test.yml)
   
 to checkout the full project, *including submodules*:  
 
