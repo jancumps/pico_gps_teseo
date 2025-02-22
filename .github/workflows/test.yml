@@ -39,9 +39,8 @@ jobs:
           gcc --version
           whereis gcc
           whereis gcc-14
-          ls -la /usr/bin | grep g++-
+          ls -la /usr/bin | grep g++
 
-          
       - name: Build Project
         working-directory: ${{github.workspace}}/test_gps_teseo
         shell: bash
