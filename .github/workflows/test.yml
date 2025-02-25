@@ -63,6 +63,7 @@ jobs:
         shell: bash
         run: |
           cd build
-          chmod +x ./test_class_module
-          ./test_class_module
-          cd ..
+          ctest
+          # chmod +x ./test_class_module
+          # ./test_class_module
+          # cd ..
