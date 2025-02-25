@@ -66,4 +66,4 @@ jobs:
           ctest
           # chmod +x ./test_class_module
           # ./test_class_module
-          # cd ..
+          cd ..
