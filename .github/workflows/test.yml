@@ -62,9 +62,8 @@ jobs:
         working-directory: ${{github.workspace}}/test_gps_teseo
         shell: bash
         run: |
+          cd build
           ctest
-          
-          # cd build
           # chmod +x ./test_class_module
           # ./test_class_module
           # cd ..
