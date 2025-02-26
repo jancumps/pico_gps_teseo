@@ -28,7 +28,7 @@ target_sources(${CMAKE_PROJECT_NAME}_shared_uart
 target_sources(${CMAKE_PROJECT_NAME}_shared_uart
         PUBLIC
         FILE_SET cxx_modules TYPE CXX_MODULES FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/callbackmanager/callbackmanager.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/callbackmanager/callbackmanager.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo_iface.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea_iface.cpp       
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset.cpp
@@ -52,7 +52,7 @@ target_sources(${CMAKE_PROJECT_NAME}_shared_i2c
 target_sources(${CMAKE_PROJECT_NAME}_shared_i2c
         PUBLIC
         FILE_SET cxx_modules TYPE CXX_MODULES FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/callbackmanager/callbackmanager.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/callbackmanager/callbackmanager.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_teseo_lib/teseo/teseo_iface.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/gps_nmea_lib/nmea/nmea_iface.cpp       
         ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset.cpp
