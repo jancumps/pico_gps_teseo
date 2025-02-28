@@ -42,12 +42,18 @@ std::string reply;
 //std::vector<std::string> replies(NMEA_MAX_REPLIES); 
 std::array<std::string, NMEA_MAX_REPLIES> replies; 
 
-int main() {
-    initialize();
-
+#pragma GCC push_options
+#pragma GCC optimize("O0")
+void setCallbacks() {
     gps.writer().set([](const std::string& s) -> void { write(s); });
     gps.reader().set([](std::string& s) -> void { read(s); });
     gps.resetter().set([]() -> void { port_pico::reset(); });
+}
+#pragma GCC pop_options
+
+int main() {
+    initialize();
+    setCallbacks();
 
     /*
     when the teseo is preset for i2c according to AN5203,
