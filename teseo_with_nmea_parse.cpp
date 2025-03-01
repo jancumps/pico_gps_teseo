@@ -113,14 +113,12 @@ void test_rmc() {
     return;
 }
 
-#pragma GCC push_options
-#pragma GCC optimize("O0")
+__attribute__((optimize(0))) 
 void setCallbacks() {
     gps.writer().set([](const std::string& s) -> void { write(s); });
     gps.reader().set([](std::string& s) -> void { read(s); });
     gps.resetter().set([]() -> void { port_pico::reset(); });
 }
-#pragma GCC pop_options
 
 int main() {
     initialize();
