@@ -90,7 +90,6 @@ size_t count_constellations(const nmea::talker_id source) {
     return i;
 }
 
-__attribute__((optimize(0))) 
 void setCallbacks() {
     gps.writer().set([](const std::string& s) -> void { write(s); });
     gps.reader().set([](std::string& s) -> void { read(s); });
