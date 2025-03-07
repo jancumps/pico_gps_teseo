@@ -1,4 +1,4 @@
-# C++ library for ST Teseo GPS - Raspberry Pico / RP2040 port
+# C++ library for ST Teseo GPS - Raspberry Pico / RP2040 port                         {#mainpage}
 
 C++ driver for the ST Teseo-LIV3 GPS module.  
 Port for Rapberry Pico / RP2040, with examples.  
@@ -24,7 +24,12 @@ goals:
 - Teseo lib code does not need to know if the project uses I2C or UART
 - lean, for embedded development.
 - port: protocol functionality (read and write method) are platform specific and need to be provided by the user.
-- Raspberry Pico I2C and UART implementation to prove that it can be done.
+- Raspberry Pico I2C and UART implementation to prove that it can be done.  
+
+example:  
+- teseo_reply_response.cpp  
+- teseo_with_nmea_parse.cpp  
+- teseo_nmea_with_data_processing.cpp  
 
 1: [Pico and I2C support](https://community.element14.com/technologies/embedded/b/blog/posts/c-library-for-st-teseo-gps---pt-1-pico-and-i2c-support?CommentId=a0dfd5e9-20a5-4ae6-8b1d-723620f2db3f)  
 2: [Dynamic GPS configuration (and some other things) ](https://community.element14.com/technologies/embedded/b/blog/posts/c-library-for-st-teseo-gps---pt-2-dynamic-gps-configuration-and-some-other-things)  
