@@ -113,7 +113,6 @@ void test_rmc() {
     return;
 }
 
-__attribute__((optimize(0))) 
 void setCallbacks() {
     gps.writer().set([](const std::string& s) -> void { write(s); });
     gps.reader().set([](std::string& s) -> void { read(s); });

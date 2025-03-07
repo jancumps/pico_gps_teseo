@@ -42,7 +42,6 @@ std::string reply;
 //std::vector<std::string> replies(NMEA_MAX_REPLIES); 
 std::array<std::string, NMEA_MAX_REPLIES> replies; 
 
-__attribute__((optimize(0))) 
 void setCallbacks() {
     gps.writer().set([](const std::string& s) -> void { write(s); });
     gps.reader().set([](std::string& s) -> void { read(s); });
