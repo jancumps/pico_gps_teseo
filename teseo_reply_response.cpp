@@ -8,8 +8,8 @@
 * @section MAIN C++ driver for the ST Teseo-LIV3 GPS module. Port for Raspberry Pico. 
 * goals:
 * - This project is a port of platform independent Teseo and NMEA libraries.  
-* - The lib code does not need to know what the target microcontroller is, or if you use I2C or UART to communicate with the Teseo IC.  
-* - Thecontroller and protocol functionality is provided by the user's project code. It has to plug in a reader and writer function. That is what this port shows. How to do that for a Raspberry Pico.  
+* - The lib code does not need to know what the target microcontroller is, or if you use I2C or UART to communicate with the Teseo IC.    
+* - The  controller and protocol functionality is provided by the user's project code. It has to plug in a reader and writer function. That is what this port shows: how to do that for a Raspberry Pico.  
 *
 * articles on element14:  
 * 1: [Pico and I2C support](https://community.element14.com/technologies/embedded/b/blog/posts/c-library-for-st-teseo-gps---pt-1-pico-and-i2c-support?CommentId=a0dfd5e9-20a5-4ae6-8b1d-723620f2db3f)  
