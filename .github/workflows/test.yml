@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: test_gps_teseo
-          submodules: true
+          submodules: false
           repository: jancumps/test_gps_teseo
 
       - name: Checkout pico_gps_teseo
