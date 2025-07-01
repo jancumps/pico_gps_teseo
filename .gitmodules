@@ -4,6 +4,3 @@
 [submodule "gps_nmea_lib"]
 	path = gps_nmea_lib
 	url = https://github.com/jancumps/gps_nmea_lib.git
-[submodule "callbackmanager"]
-	path = callbackmanager
-	url = https://github.com/jancumps/callbackmanager
