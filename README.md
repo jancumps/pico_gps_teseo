@@ -9,10 +9,10 @@ Port for Rapberry Pico / RP2040, with examples.
 ![GitHub License](https://img.shields.io/github/license/jancumps/pico_gps_teseo?label=licence)
 [![run unit tests of the teseo and nmea libs](https://github.com/jancumps/pico_gps_teseo/actions/workflows/test.yml/badge.svg)](https://github.com/jancumps/pico_gps_teseo/actions/workflows/test.yml)
   
-to checkout the full project, *including submodules*:  
+to checkout the full project:  
 
 ```
-git clone https://github.com/jancumps/pico_gps_teseo.git --recursive
+git clone https://github.com/jancumps/pico_gps_teseo.git
 ```
 
 goals:
