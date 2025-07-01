@@ -34,6 +34,17 @@ jobs:
           path: test_gps_teseo/pico_gps_teseo
           submodules: true
 
+      - name: Fetch pico_gps_teseo libs by building it
+        working-directory: ${{github.workspace}}/test_gps_teseo/pico_gps_teseo
+        shell: bash
+        run: |
+          echo ${{ github.ref }}
+          mkdir build
+          cd build
+          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/x86_64-linux-gnu-gcc-14 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/x86_64-linux-gnu-g++-14 -DCMAKE_BUILD_TYPE=Release
+          cmake --build .
+          cd ..
+
       - name: Install dependencies
         run: |
           sudo apt-get install ninja-build
