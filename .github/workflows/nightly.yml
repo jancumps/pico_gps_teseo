@@ -70,7 +70,6 @@ jobs:
           cd ..
           ls -lrt build/*.uf2
 
-
       - name: Deploy Nightly Development Release
         uses: pyTooling/Actions/releaser@r0
         with:
