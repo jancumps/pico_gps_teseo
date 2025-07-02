@@ -67,8 +67,7 @@ jobs:
           export PICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin
           source /etc/profile
           ls -lrta /opt/gcc-arm-none-eabi/bin
-          arm-none-eabi-c++ --version   
-          
+          arm-none-eabi-c++ --version             
 
       - name: Fetch pico_gps_teseo libs by building it
         working-directory: ${{github.workspace}}/test_gps_teseo/pico_gps_teseo
