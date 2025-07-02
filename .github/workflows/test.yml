@@ -33,17 +33,17 @@ jobs:
         with:
           path: test_gps_teseo/pico_gps_teseo
           submodules: true
+          
+      - name: Checkout pico-sdk/develop
+        uses: actions/checkout@v4
+        with:
+          repository: raspberrypi/pico-sdk
+          ref: develop
+          path: test_gps_teseo/pico-sdk
 
-      - name: Fetch pico_gps_teseo libs by building it
-        working-directory: ${{github.workspace}}/test_gps_teseo/pico_gps_teseo
-        shell: bash
-        run: |
-          echo ${{ github.ref }}
-          mkdir build
-          cd build
-          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/x86_64-linux-gnu-gcc-14 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/x86_64-linux-gnu-g++-14 -DCMAKE_BUILD_TYPE=Release
-          cmake --build .
-          cd ..
+      - name: Checkout pico-sdk submodules
+        working-directory: ${{github.workspace}}/test_gps_teseo/pico-sdk
+        run: git submodule update --init
 
       - name: Install dependencies
         run: |
@@ -57,6 +57,29 @@ jobs:
           whereis gcc
           whereis gcc-14
           ls -la /usr/bin | grep g++
+
+          # install gcc cross-compile for ARM v 14.2.1
+          curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/14.2.rel1/binrel/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi.tar.xz"
+          sudo mkdir /opt/gcc-arm-none-eabi
+          sudo tar xf gcc-arm-none-eabi.tar.xz --strip-components=1 -C /opt/gcc-arm-none-eabi
+          echo 'export PATH=$PATH:/opt/gcc-arm-none-eabi/bin' | sudo tee -a /etc/profile.d/gcc-arm-none-eabi.sh
+          export PATH=$PATH:/opt/gcc-arm-none-eabi/bin
+          export PICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin
+          source /etc/profile
+          ls -lrta /opt/gcc-arm-none-eabi/bin
+          arm-none-eabi-c++ --version   
+          
+
+      - name: Fetch pico_gps_teseo libs by building it
+        working-directory: ${{github.workspace}}/test_gps_teseo/pico_gps_teseo
+        shell: bash
+        run: |
+          echo ${{ github.ref }}
+          mkdir build
+          cd build
+          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/x86_64-linux-gnu-gcc-14 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/x86_64-linux-gnu-g++-14 -DCMAKE_BUILD_TYPE=Release
+          cmake --build .
+          cd ..
 
       - name: Build Project
         working-directory: ${{github.workspace}}/test_gps_teseo
