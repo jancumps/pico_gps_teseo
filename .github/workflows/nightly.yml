@@ -22,7 +22,6 @@ jobs:
         with:
           path: pico_gps_teseo
           ref: develop
-          submodules: true
 
       - name: Checkout pico-sdk/develop
         uses: actions/checkout@v4
