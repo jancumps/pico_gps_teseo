@@ -30,6 +30,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+
+      - name: Checkout pico-sdk/develop
+        uses: actions/checkout@v4
+        with:
+          repository: raspberrypi/pico-sdk
+          ref: develop
+          path: pico-sdk
+
+      - name: Checkout pico-sdk submodules
+        working-directory: ${{github.workspace}}/pico-sdk
+        run: git submodule update --init
+
       - name: Install dependencies
         run: |
           sudo apt-get install ninja-build
@@ -55,7 +67,7 @@ jobs:
           arm-none-eabi-c++ --version             
 
       - name: Fetch pico_gps_teseo libs
-        working-directory: ${{github.workspace}}/test_gps_teseo/pico_gps_teseo
+        working-directory: ${{github.workspace}}
         shell: bash
         run: |
           echo ${{ github.ref }}
@@ -68,11 +80,13 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Run Doxygen
         uses: mattnotmitt/doxygen-action@edge
         with:
           # working-directory: '${{github.workspace}}/Kerbal/doxygen'
           doxyfile-path: 'Doxyfile'
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
