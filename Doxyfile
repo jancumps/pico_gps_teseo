@@ -964,6 +964,11 @@ RECURSIVE              = YES
 # run.
 
 EXCLUDE                = pico_sdk \
+                         build/_deps/callbackmanager-src/example \                         
+                         build/_deps/callbackmanager-src/test \                         
+                         build/_deps/gps_nmea_lib-src/example \                         
+                         build/_deps/gps_nmea_lib-src/test \                         
+                         build/_deps/gps_teseo_lib-src/test \                         
                          build/_deps/picotool-src \                         
                          build/_deps/picotool-build \                         
                          build/generated \                         
