@@ -29,7 +29,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+        with:
+          path: pico_gps_teseo
 
       - name: Checkout pico-sdk/develop
         uses: actions/checkout@v4
@@ -71,9 +72,10 @@ jobs:
         shell: bash
         run: |
           echo ${{ github.ref }}
+          cd pico_gps_teseo
           mkdir build
           cd build
-          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-g++ -DPICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin -DPICO_SDK_PATH=../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
+          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-g++ -DPICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
           cmake --build .
           cd ..
           ls -lrt build/*.uf2
@@ -84,13 +86,13 @@ jobs:
       - name: Run Doxygen
         uses: mattnotmitt/doxygen-action@edge
         with:
-          working-directory: /github/workspace
+          working-directory: /github/workspace/pico_gps_teseo
           doxyfile-path: 'Doxyfile'
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: doc_generated/html
+          path: pico_gps_teseo/doc_generated/html
 
   # Deployment job
   deploy:
