@@ -84,7 +84,7 @@ jobs:
       - name: Run Doxygen
         uses: mattnotmitt/doxygen-action@edge
         with:
-          working-directory: ${{github.workspace}}
+          working-directory: /github/workspace
           doxyfile-path: 'Doxyfile'
 
       - name: Upload artifact
