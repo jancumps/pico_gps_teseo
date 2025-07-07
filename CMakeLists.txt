@@ -25,7 +25,7 @@ FetchContent_MakeAvailable(callbackmanager)
 
 FetchContent_Declare(gps_teseo_lib
   GIT_REPOSITORY "https://github.com/jancumps/gps_teseo_lib.git"
-  GIT_TAG "3b0545f"
+  GIT_TAG "740b561"
   SOURCE_SUBDIR =
 )
 FetchContent_MakeAvailable(gps_teseo_lib)
