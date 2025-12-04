@@ -61,7 +61,10 @@ bool retrieve_rmc() {
     bool valid; // intentionally uninitialised
     valid = gps.ask_rmc(reply);
     if (!valid) { return false; }
-    valid = nmea::rmc::from_data(reply, rmc);
+    if (auto result = nmea::rmc::from_data(reply)) {
+        valid = true;
+        rmc = result.result;
+    }
     return valid;
 }
 
@@ -71,8 +74,9 @@ size_t retrieve_gsv() {
     if (!valid) { return 0; }
     size_t index = 0;
 	for(const auto& r : std::ranges::subrange(replies.begin(), replies.begin() + count)) {
-        valid = nmea::gsv::from_data(r, gsv_set[index]);
-        if (!valid) {
+        if (auto result = nmea::gsv::from_data(r)) {
+            gsv_set[index] = result.result;
+        }   else {
             break;
         }
         index++;
