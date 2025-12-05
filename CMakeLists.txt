@@ -32,7 +32,7 @@ FetchContent_MakeAvailable(gps_teseo_lib)
 
 FetchContent_Declare(gps_nmea_lib
   GIT_REPOSITORY "https://github.com/jancumps/gps_nmea_lib.git"
-  GIT_TAG "dca625f"
+  GIT_TAG "f96fb33"
   SOURCE_SUBDIR =
 )
 FetchContent_MakeAvailable(gps_nmea_lib)

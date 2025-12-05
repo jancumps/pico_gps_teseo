@@ -61,7 +61,7 @@ bool retrieve_rmc() {
     bool valid; // intentionally uninitialised
     valid = gps.ask_rmc(reply);
     if (!valid) { return false; }
-    if (auto result = nmea::rmc::from_data(reply)) {
+    if (auto result = nmea::rmc::from_data(reply)) { // TODO: when GCC 15.1 released for ARM, use auto [result]
         valid = true;
         rmc = result.result;
     }
