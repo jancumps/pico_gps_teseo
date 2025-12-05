@@ -52,14 +52,33 @@ jobs:
           sudo apt-get install cmake
           sudo add-apt-repository universe
           sudo apt update
-          sudo apt install gcc-14
+          
+          # sudo apt install gcc-15
+          echo install gcc 15
+          sudo apt install -y build-essential git make gawk flex bison libgmp-dev libmpfr-dev libmpc-dev python3 binutils perl libisl-dev libzstd-dev tar gzip bzip2
+          export CONFIG_SHELL=/bin/bash
+          mkdir ~/gcc-15
+          cd ~/gcc-15
+          git clone https://gcc.gnu.org/git/gcc.git gcc-15-source
+          cd gcc-15-source
+          git checkout releases/gcc-15.2.0
+          ./contrib/download_prerequisites
+          cd ~/gcc-15
+          mkdir gcc-15-build
+          cd gcc-15-build
+          ../gcc-15-source/configure --prefix=/opt/gcc-15 --disable-multilib --enable-languages=c,c++
+          make -j$(nproc)
+          sudo make install
+          sudo update-alternatives --install /usr/bin/gcc gcc /opt/gcc-15/bin/gcc 100
+          sudo update-alternatives --install /usr/bin/g++ g++ /opt/gcc-15/bin/g++ 100
+
           gcc --version
           whereis gcc
-          whereis gcc-14
+          whereis gcc-15
           ls -la /usr/bin | grep g++
 
-          # install gcc cross-compile for ARM v 14.2.1
-          curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/14.2.rel1/binrel/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi.tar.xz"
+          # install gcc cross-compile for ARM v 14.3.1
+          curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi.tar.xz"
           sudo mkdir /opt/gcc-arm-none-eabi
           sudo tar xf gcc-arm-none-eabi.tar.xz --strip-components=1 -C /opt/gcc-arm-none-eabi
           echo 'export PATH=$PATH:/opt/gcc-arm-none-eabi/bin' | sudo tee -a /etc/profile.d/gcc-arm-none-eabi.sh
@@ -88,7 +107,7 @@ jobs:
           echo ${{ github.ref }}
           mkdir build
           cd build
-          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/x86_64-linux-gnu-gcc-14 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/x86_64-linux-gnu-g++-14 -DCMAKE_BUILD_TYPE=Release -DPATH_TO_LIBS=pico_gps_teseo/build/_deps
+          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/opt/gcc-15/bin/gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/gcc-15/bin/g++ -DCMAKE_BUILD_TYPE=Release
           cmake --build .
           cd ..
 
