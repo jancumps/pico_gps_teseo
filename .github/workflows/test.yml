@@ -107,7 +107,7 @@ jobs:
           echo ${{ github.ref }}
           mkdir build
           cd build
-          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/x86_64-linux-gnu-gcc-15 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/x86_64-linux-gnu-g++-15 -DCMAKE_BUILD_TYPE=Release -DPATH_TO_LIBS=pico_gps_teseo/build/_deps
+          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/opt/gcc-15/bin/gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/gcc-15/bin/g++ -DCMAKE_BUILD_TYPE=Release
           cmake --build .
           cd ..
 
