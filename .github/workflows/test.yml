@@ -52,10 +52,10 @@ jobs:
           sudo apt-get install cmake
           sudo add-apt-repository universe
           sudo apt update
-          sudo apt install gcc-14
+          sudo apt install gcc-15
           gcc --version
           whereis gcc
-          whereis gcc-14
+          whereis gcc-15
           ls -la /usr/bin | grep g++
 
           # install gcc cross-compile for ARM v 14.2.1
@@ -88,7 +88,7 @@ jobs:
           echo ${{ github.ref }}
           mkdir build
           cd build
-          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/x86_64-linux-gnu-gcc-14 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/x86_64-linux-gnu-g++-14 -DCMAKE_BUILD_TYPE=Release -DPATH_TO_LIBS=pico_gps_teseo/build/_deps
+          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/x86_64-linux-gnu-gcc-15 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/x86_64-linux-gnu-g++-15 -DCMAKE_BUILD_TYPE=Release -DPATH_TO_LIBS=pico_gps_teseo/build/_deps
           cmake --build .
           cd ..
 
