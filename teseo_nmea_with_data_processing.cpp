@@ -61,9 +61,9 @@ bool retrieve_rmc() {
     bool valid; // intentionally uninitialised
     valid = gps.ask_rmc(reply);
     if (!valid) { return false; }
-    if (auto result = nmea::rmc::from_data(reply)) { // TODO: when GCC 15.1 released for ARM, use auto [result]
+    if (auto&& [result] = nmea::rmc::from_data(reply)) { // TODO: when GCC 15.1 released for ARM, use auto [result]
         valid = true;
-        rmc = result.result;
+        rmc = result;
     }
     return valid;
 }
@@ -74,8 +74,8 @@ size_t retrieve_gsv() {
     if (!valid) { return 0; }
     size_t index = 0;
 	for(const auto& r : std::ranges::subrange(replies.begin(), replies.begin() + count)) {
-        if (auto result = nmea::gsv::from_data(r)) {
-            gsv_set[index] = result.result;
+        if (auto&& [result] = nmea::gsv::from_data(r)) {
+            gsv_set[index] = result;
         }   else {
             break;
         }
