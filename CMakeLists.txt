@@ -1,16 +1,37 @@
+# Generated Cmake Pico project file
+
 cmake_minimum_required(VERSION 3.28)
-
-set(PICO_DEOPTIMIZED_DEBUG 1)
-
-# Pull in SDK (must be before project)
-include(pico_sdk_import.cmake)
-# set(PICO_BOARD seeed_xiao_rp2040)
-
-project(pico_gps_teseo C CXX ASM)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 26)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules-ts")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules-ts -fcommon -fno-rtti -fno-exceptions")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(PICO_DEOPTIMIZED_DEBUG 1)
+
+# Initialise pico_sdk from installed location
+# (note this can come from environment, CMake cache etc)
+
+# == DO NOT EDIT THE FOLLOWING LINES for the Raspberry Pi Pico VS Code Extension to work ==
+if(WIN32)
+    set(USERHOME $ENV{USERPROFILE})
+else()
+    set(USERHOME $ENV{HOME})
+endif()
+set(sdkVersion 2.2.0)
+set(toolchainVersion RISCV_ZCB_RPI_2_2_0_3)
+set(picotoolVersion 2.2.0-a4)
+set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
+if (EXISTS ${picoVscode})
+    include(${picoVscode})
+endif()
+# ====================================================================================
+set(PICO_BOARD pico2_w CACHE STRING "Board type")
+
+# Pull in Raspberry Pi Pico SDK (must be before project)
+include(pico_sdk_import.cmake)
+
+project(pico_gps_teseo C CXX ASM)
 
 pico_sdk_init()
 
