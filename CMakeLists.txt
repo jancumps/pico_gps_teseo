@@ -26,7 +26,7 @@ if (EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
 # ====================================================================================
-set(PICO_BOARD pico2_w CACHE STRING "Board type")
+set(PICO_BOARD pico2 CACHE STRING "Board type")
 
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
@@ -109,46 +109,81 @@ target_link_libraries(${CMAKE_PROJECT_NAME}_shared_i2c
         pico_stdlib hardware_gpio hardware_i2c
 )
 
-# macro to build firmware binary for the examples
-macro(__build_firmware example protocol)
-message("building firmware for example ${example}, protocol ${protocol}")
+# # macro to build firmware binary for the examples
+# macro(__build_firmware example protocol)
+# message("building firmware for example ${example}, protocol ${protocol}")
 
-add_executable(${CMAKE_PROJECT_NAME}_${example}_${protocol}
-        ${CMAKE_CURRENT_SOURCE_DIR}/teseo_${example}.cpp
+# add_executable(${CMAKE_PROJECT_NAME}_${example}_${protocol}
+#         ${CMAKE_CURRENT_SOURCE_DIR}/teseo_${example}.cpp
+# )
+
+# target_link_libraries(${CMAKE_PROJECT_NAME}_${example}_${protocol} PUBLIC 
+#         ${CMAKE_PROJECT_NAME}_shared_${protocol}
+# )
+
+# target_include_directories(${CMAKE_PROJECT_NAME}_${example}_${protocol} PUBLIC 
+# )
+
+# # select the debug output (optional, not used by the GPS interface)
+# pico_enable_stdio_uart(${CMAKE_PROJECT_NAME}_${example}_${protocol} 1)
+# pico_enable_stdio_usb(${CMAKE_PROJECT_NAME}_${example}_${protocol} 0)
+
+# pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_${example}_${protocol} )
+
+# endmacro()
+
+# # build the examples
+# # ------------------
+
+# # build teseo reply response example --------------------------------------
+
+# __build_firmware("reply_response" "uart")
+
+# __build_firmware("reply_response" "i2c")
+
+# # build nmea parse example --------------------------------------
+
+# __build_firmware("with_nmea_parse" "uart")
+
+# __build_firmware("with_nmea_parse" "i2c")
+
+# # build nmea with data processing example --------------------------------------
+
+# __build_firmware("nmea_with_data_processing" "uart")
+
+# __build_firmware("nmea_with_data_processing" "i2c")
+
+message("building debugable binary nmea_with_data_processing, protocol i2c")
+
+add_executable(${CMAKE_PROJECT_NAME}
+        ${CMAKE_CURRENT_SOURCE_DIR}/teseo_nmea_with_data_processing.cpp
 )
 
-target_link_libraries(${CMAKE_PROJECT_NAME}_${example}_${protocol} PUBLIC 
-        ${CMAKE_PROJECT_NAME}_shared_${protocol}
+target_sources(${CMAKE_PROJECT_NAME}
+        PUBLIC
+        ${gps_teseo_lib_SOURCE_DIR}/teseo/teseo.cpp
+        ${gps_nmea_lib_SOURCE_DIR}/nmea/nmea.cpp       
+)
+target_sources(${CMAKE_PROJECT_NAME}
+        PUBLIC
+        FILE_SET cxx_modules TYPE CXX_MODULES FILES
+        ${callbackmanager_SOURCE_DIR}/callbackmanager.cpp
+        ${gps_teseo_lib_SOURCE_DIR}/teseo/teseo_iface.cpp
+        ${gps_nmea_lib_SOURCE_DIR}/nmea/nmea_iface.cpp       
+        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/i2c/teseo_communicate.cpp
 )
 
-target_include_directories(${CMAKE_PROJECT_NAME}_${example}_${protocol} PUBLIC 
+
+target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC
+        pico_stdlib hardware_gpio hardware_i2c
+)
+
+target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC 
 )
 
 # select the debug output (optional, not used by the GPS interface)
-pico_enable_stdio_uart(${CMAKE_PROJECT_NAME}_${example}_${protocol} 1)
-pico_enable_stdio_usb(${CMAKE_PROJECT_NAME}_${example}_${protocol} 0)
+pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 1)
+pico_enable_stdio_usb(${CMAKE_PROJECT_NAME} 0)
 
-pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_${example}_${protocol} )
-
-endmacro()
-
-# build the examples
-# ------------------
-
-# build teseo reply response example --------------------------------------
-
-__build_firmware("reply_response" "uart")
-
-__build_firmware("reply_response" "i2c")
-
-# build nmea parse example --------------------------------------
-
-__build_firmware("with_nmea_parse" "uart")
-
-__build_firmware("with_nmea_parse" "i2c")
-
-# build nmea with data processing example --------------------------------------
-
-__build_firmware("nmea_with_data_processing" "uart")
-
-__build_firmware("nmea_with_data_processing" "i2c")
+pico_add_extra_outputs(${CMAKE_PROJECT_NAME} )
