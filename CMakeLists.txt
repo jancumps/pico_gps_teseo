@@ -9,23 +9,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules-ts -fcommon -fno-rtti -fno-exc
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(PICO_DEOPTIMIZED_DEBUG 1)
 
-# Initialise pico_sdk from installed location
-# (note this can come from environment, CMake cache etc)
-
-# == DO NOT EDIT THE FOLLOWING LINES for the Raspberry Pi Pico VS Code Extension to work ==
-if(WIN32)
-    set(USERHOME $ENV{USERPROFILE})
-else()
-    set(USERHOME $ENV{HOME})
-endif()
-set(sdkVersion 2.2.0)
-set(toolchainVersion RISCV_ZCB_RPI_2_2_0_3)
-set(picotoolVersion 2.2.0-a4)
-set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
-if (EXISTS ${picoVscode})
-    include(${picoVscode})
-endif()
-# ====================================================================================
+set(PICO_PLATFORM rp2350-riscv CACHE STRING "Pico Platform")
 set(PICO_BOARD pico2 CACHE STRING "Board type")
 
 # Pull in Raspberry Pi Pico SDK (must be before project)
@@ -128,7 +112,7 @@ target_include_directories(${CMAKE_PROJECT_NAME}_${example}_${protocol} PUBLIC
 pico_enable_stdio_uart(${CMAKE_PROJECT_NAME}_${example}_${protocol} 1)
 pico_enable_stdio_usb(${CMAKE_PROJECT_NAME}_${example}_${protocol} 0)
 
-pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_${example}_${protocol} )
+# pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_${example}_${protocol} )
 
 endmacro()
 
@@ -153,39 +137,3 @@ __build_firmware("nmea_with_data_processing" "uart")
 
 __build_firmware("nmea_with_data_processing" "i2c")
 
-# Create a target with the project name, in case you use 
-# the Raspberry Pico VSCode extension in full,  without CMake control.
-message("for Pico extension building debugable firmware nmea_with_data_processing, protocol i2c")
-
-add_executable(${CMAKE_PROJECT_NAME}
-        ${CMAKE_CURRENT_SOURCE_DIR}/teseo_nmea_with_data_processing.cpp
-)
-
-target_sources(${CMAKE_PROJECT_NAME}
-        PUBLIC
-        ${gps_teseo_lib_SOURCE_DIR}/teseo/teseo.cpp
-        ${gps_nmea_lib_SOURCE_DIR}/nmea/nmea.cpp       
-)
-target_sources(${CMAKE_PROJECT_NAME}
-        PUBLIC
-        FILE_SET cxx_modules TYPE CXX_MODULES FILES
-        ${callbackmanager_SOURCE_DIR}/callbackmanager.cpp
-        ${gps_teseo_lib_SOURCE_DIR}/teseo/teseo_iface.cpp
-        ${gps_nmea_lib_SOURCE_DIR}/nmea/nmea_iface.cpp       
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/reset.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/port/pico/i2c/teseo_communicate.cpp
-)
-
-
-target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC
-        pico_stdlib hardware_gpio hardware_i2c
-)
-
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC 
-)
-
-# select the debug output (optional, not used by the GPS interface)
-pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 1)
-pico_enable_stdio_usb(${CMAKE_PROJECT_NAME} 0)
-
-pico_add_extra_outputs(${CMAKE_PROJECT_NAME} )
