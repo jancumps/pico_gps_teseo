@@ -7,6 +7,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules-ts -fcommon -fno-rtti -fno-exc
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(PICO_DEOPTIMIZED_DEBUG 1)
 
+if (NOT DEFINED ENV{PICOTOOL_DIR})
+        message("set PICOTOOL_DIR env variable if you want to create uf2 output with pico_add_extra_outputs()")
+else()
+        message("PICOTOOL_DIR env variable is set to '$ENV{PICOTOOL_DIR}'")
+        set(picotool_DIR $ENV{PICOTOOL_DIR})
+endif()
+
 set(PICO_PLATFORM rp2350-riscv CACHE STRING "Pico Platform")
 set(PICO_BOARD pico2 CACHE STRING "Board type")
 
@@ -110,7 +117,7 @@ target_include_directories(${CMAKE_PROJECT_NAME}_${example}_${protocol} PUBLIC
 pico_enable_stdio_uart(${CMAKE_PROJECT_NAME}_${example}_${protocol} 1)
 pico_enable_stdio_usb(${CMAKE_PROJECT_NAME}_${example}_${protocol} 0)
 
-# pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_${example}_${protocol} )
+pico_add_extra_outputs(${CMAKE_PROJECT_NAME}_${example}_${protocol} )
 
 endmacro()
 
