@@ -56,6 +56,17 @@ jobs:
           # ls -lrta /usr/bin/arm-none-eabi-gcc
           # /usr/bin/arm-none-eabi-gcc --version
 
+          # sudo apt install gcc-arm-none-eabi
+
+          #install picotool
+          curl -Lo picotool-2.2.0-a4-x86_64-lin.tar.gz "https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.2.0-3/picotool-2.2.0-a4-x86_64-lin.tar.gz"
+          sudo mkdir /opt/picotool
+          sudo tar -xvzf picotool-2.2.0-a4-x86_64-lin.tar.gz --strip-components=1 -C /opt/picotool
+          sudo chmod +x /opt/picotool/picotool
+          echo 'export PATH=$PATH:/opt/picotool' | sudo tee -a /etc/profile.d/picotool.sh
+          export PATH=$PATH:/opt/picotool
+          source /etc/profile
+
       - name: Build Project
         working-directory: ${{github.workspace}}/pico_gps_teseo
         # bash required otherwise this mysteriously (no error) fails at "Generating cyw43_bus_pio_spi.pio.h"
@@ -64,7 +75,7 @@ jobs:
           echo ${{ github.ref }}
           mkdir build
           cd build
-          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-g++ -DPICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
+          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DPICOTOOL_DIR=/opt/picotool -DCMAKE_C_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-g++ -DPICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
           cmake --build .
           cd ..
           ls -lrt build/*.uf2
