@@ -61,6 +61,8 @@ jobs:
           sudo mkdir /opt/picotool
           sudo tar -xvzf picotool-2.2.0-a4-x86_64-lin.tar.gz --strip-components=1 -C /opt/picotool
           sudo chmod +x /opt/picotool/picotool
+          ls -lrta /opt/picotool
+          ls -lrta /opt/picotool/picotool
           echo 'export PATH=$PATH:/opt/picotool' | sudo tee -a /etc/profile.d/picotool.sh
           export PATH=$PATH:/opt/picotool
           source /etc/profile
