@@ -53,14 +53,14 @@ FetchContent_MakeAvailable(callbackmanager)
 
 FetchContent_Declare(gps_teseo_lib
   GIT_REPOSITORY "https://github.com/jancumps/gps_teseo_lib.git"
-  GIT_TAG "fd37710"
+  GIT_TAG "63dbcee"
   SOURCE_SUBDIR =
 )
 FetchContent_MakeAvailable(gps_teseo_lib)
 
 FetchContent_Declare(gps_nmea_lib
   GIT_REPOSITORY "https://github.com/jancumps/gps_nmea_lib.git"
-  GIT_TAG "8e8dc74"
+  GIT_TAG "0933607"
   SOURCE_SUBDIR =
 )
 FetchContent_MakeAvailable(gps_nmea_lib)
