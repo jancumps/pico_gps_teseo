@@ -40,8 +40,8 @@ jobs:
 
           sudo apt-get install cmake
 
-          # install gcc cross-compile for ARM v 14.2.1
-          curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/14.2.rel1/binrel/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi.tar.xz"
+          # install gcc cross-compile for ARM v 15.2.1
+          curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/15.2.rel1/binrel/arm-gnu-toolchain-15.2.rel1-x86_64-arm-none-eabi.tar.xz"
           sudo mkdir /opt/gcc-arm-none-eabi
           sudo tar xf gcc-arm-none-eabi.tar.xz --strip-components=1 -C /opt/gcc-arm-none-eabi
           echo 'export PATH=$PATH:/opt/gcc-arm-none-eabi/bin' | sudo tee -a /etc/profile.d/gcc-arm-none-eabi.sh
@@ -56,6 +56,17 @@ jobs:
           # ls -lrta /usr/bin/arm-none-eabi-gcc
           # /usr/bin/arm-none-eabi-gcc --version
 
+          # sudo apt install gcc-arm-none-eabi
+
+          #install picotool
+          curl -Lo picotool-2.2.0-a4-x86_64-lin.tar.gz "https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.2.0-3/picotool-2.2.0-a4-x86_64-lin.tar.gz"
+          sudo mkdir /opt/picotool
+          sudo tar -xvzf picotool-2.2.0-a4-x86_64-lin.tar.gz --strip-components=1 -C /opt/picotool
+          sudo chmod +x /opt/picotool/picotool
+          echo 'export PATH=$PATH:/opt/picotool' | sudo tee -a /etc/profile.d/picotool.sh
+          export PATH=$PATH:/opt/picotool
+          source /etc/profile
+
       - name: Build Project
         working-directory: ${{github.workspace}}/pico_gps_teseo
         # bash required otherwise this mysteriously (no error) fails at "Generating cyw43_bus_pio_spi.pio.h"
@@ -64,7 +75,7 @@ jobs:
           echo ${{ github.ref }}
           mkdir build
           cd build
-          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-g++ -DPICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
+          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DPICO_PLATFORM=rp2040 -DPICO_BOARD=pico -DPICOTOOL_DIR=/opt/picotool -DCMAKE_C_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-g++ -DPICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release -DPICO_BOARD=pico
           cmake --build .
           cd ..
           ls -lrt build/*.uf2
