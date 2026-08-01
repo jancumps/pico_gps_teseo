@@ -55,7 +55,6 @@ jobs:
           # arm-none-eabi-c++ --version
           
           sudo apt install gcc-arm-none-eabi
-          ls /opt/gcc-arm-none-eabi/bin
 
           #install picotool
           curl -Lo picotool-2.2.0-a4-x86_64-lin.tar.gz "https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.2.0-3/picotool-2.2.0-a4-x86_64-lin.tar.gz"
@@ -79,8 +78,8 @@ jobs:
           export PICO_BOARD=pico 
           export PICO_PLATFORM=rp2040
           export PICOTOOL_DIR=/opt/picotool
-          export PICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin
-          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-g++ -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release
+          export PICO_TOOLCHAIN_PATH=/usr/bin
+          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/arm-none-eabi-g++ -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release
           cmake --build .
           cd ..
           ls -lrt build/*.uf2
