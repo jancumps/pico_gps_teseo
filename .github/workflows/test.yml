@@ -13,7 +13,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - name: Clean workspace
         run: |
@@ -22,20 +22,20 @@ jobs:
           mkdir -p "${{ github.workspace }}"
 
       - name: Checkout test_gps_teseo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: test_gps_teseo
           submodules: false
           repository: jancumps/test_gps_teseo
 
       - name: Checkout pico_gps_teseo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: test_gps_teseo/pico_gps_teseo
           submodules: true
           
       - name: Checkout pico-sdk/develop
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: raspberrypi/pico-sdk
           ref: develop
@@ -52,43 +52,9 @@ jobs:
           sudo apt-get install cmake
           sudo add-apt-repository universe
           sudo apt update
-          
-          # sudo apt install gcc-15
-          echo install gcc 15
-          sudo apt install -y build-essential git make gawk flex bison libgmp-dev libmpfr-dev libmpc-dev python3 binutils perl libisl-dev libzstd-dev tar gzip bzip2
-          export CONFIG_SHELL=/bin/bash
-          mkdir ~/gcc-15
-          cd ~/gcc-15
-          git clone https://gcc.gnu.org/git/gcc.git gcc-15-source
-          cd gcc-15-source
-          git checkout releases/gcc-15.2.0
-          ./contrib/download_prerequisites
-          cd ~/gcc-15
-          mkdir gcc-15-build
-          cd gcc-15-build
-          ../gcc-15-source/configure --prefix=/opt/gcc-15 --disable-multilib --enable-languages=c,c++
-          make -j$(nproc)
-          sudo make install
-          sudo update-alternatives --install /usr/bin/gcc gcc /opt/gcc-15/bin/gcc 100
-          sudo update-alternatives --install /usr/bin/g++ g++ /opt/gcc-15/bin/g++ 100
-
-          gcc --version
-          whereis gcc
-          whereis gcc-15
-          ls -la /usr/bin | grep g++
-
-          # install gcc cross-compile for ARM v 15.2.1
-          curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/15.2.rel1/binrel/arm-gnu-toolchain-15.2.rel1-x86_64-arm-none-eabi.tar.xz"
-          sudo mkdir /opt/gcc-arm-none-eabi
-          sudo tar xf gcc-arm-none-eabi.tar.xz --strip-components=1 -C /opt/gcc-arm-none-eabi
-          echo 'export PATH=$PATH:/opt/gcc-arm-none-eabi/bin' | sudo tee -a /etc/profile.d/gcc-arm-none-eabi.sh
-          export PATH=$PATH:/opt/gcc-arm-none-eabi/bin
-          export PICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin
-          source /etc/profile
-          ls -lrta /opt/gcc-arm-none-eabi/bin
+              
+          sudo apt install gcc-arm-none-eabi
           arm-none-eabi-c++ --version
-          
-          # sudo apt install gcc-arm-none-eabi
 
           #install picotool
           curl -Lo picotool-2.2.0-a4-x86_64-lin.tar.gz "https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.2.0-3/picotool-2.2.0-a4-x86_64-lin.tar.gz"
@@ -118,7 +84,7 @@ jobs:
           echo ${{ github.ref }}
           mkdir build
           cd build
-          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/opt/gcc-15/bin/gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/gcc-15/bin/g++ -DCMAKE_BUILD_TYPE=Release
+          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++ -DCMAKE_BUILD_TYPE=Release
           cmake --build .
           cd ..
 

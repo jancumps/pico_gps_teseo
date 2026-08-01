@@ -13,7 +13,7 @@ on:
 
 jobs:
   build:
-    runs-on: runs-on: ubuntu-26.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Clean workspace
         run: |
@@ -22,12 +22,12 @@ jobs:
           mkdir -p "${{ github.workspace }}"
 
       - name: Checkout pico_gps_teseo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: pico_gps_teseo
 
       - name: Checkout pico-sdk/develop
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: raspberrypi/pico-sdk
           ref: develop
