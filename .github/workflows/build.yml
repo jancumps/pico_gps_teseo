@@ -55,7 +55,7 @@ jobs:
           # arm-none-eabi-c++ --version
           
           sudo apt install gcc-arm-none-eabi
-          whereis gcc-arm-none-eabi
+          ls /opt/gcc-arm-none-eabi/bin
 
           #install picotool
           curl -Lo picotool-2.2.0-a4-x86_64-lin.tar.gz "https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.2.0-3/picotool-2.2.0-a4-x86_64-lin.tar.gz"
