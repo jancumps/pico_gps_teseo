@@ -63,7 +63,7 @@ jobs:
           export PATH=$PATH:/opt/riscv32-unknown-elf/bin
           export PICO_TOOLCHAIN_PATH=/opt/riscv32-unknown-elf/bin
           source /etc/profile
-          ls -lrta /opt/riscv32-unknown-elf/bin
+          ls -Rlrta /opt/riscv32-unknown-elf
           riscv32-unknown-elf-c++ --version          
 
           #install picotool
