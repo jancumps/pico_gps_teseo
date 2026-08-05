@@ -95,7 +95,7 @@ jobs:
           doxyfile-path: 'Doxyfile'
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v7
+        uses: actions/upload-pages-artifact@v5
         with:
           path: pico_gps_teseo/doc_generated/html
 
