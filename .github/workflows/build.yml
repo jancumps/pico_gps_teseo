@@ -58,12 +58,12 @@ jobs:
           # install gcc cross-compile for RISC-V v 15
           curl -Lo riscv32-unknown-elf.tar.xz https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.3.0-0/riscv-toolchain-15-x86_64-lin.tar.gz
           sudo mkdir /opt/riscv32-unknown-elf
-          sudo tar xvf riscv32-unknown-elf.tar.xz --strip-components=1 -C /opt/riscv32-unknown-elf
-          echo 'export PATH=$PATH:/opt/riscv32-unknown-elf/bin' | sudo tee -a /etc/profile.d/riscv32-unknown-elf.sh
-          export PATH=$PATH:/opt/riscv32-unknown-elf/bin
-          export PICO_TOOLCHAIN_PATH=/opt/riscv32-unknown-elf/bin
+          sudo tar xf riscv32-unknown-elf.tar.xz --strip-components=1 -C /opt/riscv32-unknown-elf
+          echo 'export PATH=$PATH:/opt/riscv32-unknown-elf' | sudo tee -a /etc/profile.d/riscv32-unknown-elf.sh
+          export PATH=$PATH:/opt/riscv32-unknown-elf
+          export PICO_TOOLCHAIN_PATH=/opt/riscv32-unknown-elf
           source /etc/profile
-          ls -Rlrta /opt/riscv32-unknown-elf
+          ls -lrta /opt/riscv32-unknown-elf
           riscv32-unknown-elf-c++ --version          
 
           #install picotool
