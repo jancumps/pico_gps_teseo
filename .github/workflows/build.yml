@@ -54,6 +54,19 @@ jobs:
           ls -lrta /opt/gcc-arm-none-eabi/bin
           arm-none-eabi-c++ --version
 
+          # # install gcc cross-compile for RISC-V v 15
+          # curl -Lo riscv32-unknown-elf.tar.xz https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.3.0-0/riscv-toolchain-15-x86_64-lin.tar.gz
+          # sudo mkdir /opt/riscv32-unknown-elf
+          # sudo tar xf riscv32-unknown-elf.tar.xz --strip-components=1 -C /opt/riscv32-unknown-elf
+          # echo 'export PATH=$PATH:/opt/riscv32-unknown-elf' | sudo tee -a /etc/profile.d/riscv32-unknown-elf.sh
+          # export PATH=$PATH:/opt/riscv32-unknown-elf
+          # export PICO_TOOLCHAIN_PATH=/opt/riscv32-unknown-elf
+          # source /etc/profile
+          # ls -lrta /opt/riscv32-unknown-elf
+          # riscv32-unknown-elf-c++ --version
+          # export _C_COMPILER=/opt/riscv32-unknown-elf/riscv32-unknown-elf-gcc
+          # export _CXX_COMPILER=/opt/riscv32-unknown-elf/riscv32-unknown-elf-g++          
+
           #install picotool
           curl -Lo picotool-2.3.0-x86_64-lin.tar.gz "https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.3.0-0/picotool-2.3.0-x86_64-lin.tar.gz"
           sudo mkdir /opt/picotool
@@ -71,6 +84,8 @@ jobs:
         shell: bash
         run: |
           echo ${{ github.ref }}
+          CFLAGS=
+          CMAKE_CXX_FLAGS=
           mkdir build
           cd build
           export PICO_BOARD=pico 
