@@ -84,8 +84,6 @@ jobs:
         shell: bash
         run: |
           echo ${{ github.ref }}
-          CFLAGS=
-          CMAKE_CXX_FLAGS=
           mkdir build
           cd build
           export PICO_BOARD=pico 
