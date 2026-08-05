@@ -3,8 +3,15 @@ cmake_minimum_required(VERSION 3.28)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules-ts -fcommon -fno-rtti -fno-exceptions")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules-ts -fcommon -fno-rtti -fno-exceptions -fPIC")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Oplossing: Verwijder de vlag -flto uit uw compiler- en linkerinstellingen (zowel CFLAGS als LDFLAGS).
+string(REPLACE "-flto" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+string(REPLACE "-flto" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+string(REPLACE "-flto" "" CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
+
+
 set(PICO_DEOPTIMIZED_DEBUG 1)
 
 # path to PICO utilities (if needed)
