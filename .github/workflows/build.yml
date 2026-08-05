@@ -53,22 +53,6 @@ jobs:
           source /etc/profile
           ls -lrta /opt/gcc-arm-none-eabi/bin
           arm-none-eabi-c++ --version
-          export _C_COMPILER=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc
-          export _CXX_COMPILER=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-g++
-
-
-          # # install gcc cross-compile for RISC-V v 15
-          # curl -Lo riscv32-unknown-elf.tar.xz https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.3.0-0/riscv-toolchain-15-x86_64-lin.tar.gz
-          # sudo mkdir /opt/riscv32-unknown-elf
-          # sudo tar xf riscv32-unknown-elf.tar.xz --strip-components=1 -C /opt/riscv32-unknown-elf
-          # echo 'export PATH=$PATH:/opt/riscv32-unknown-elf' | sudo tee -a /etc/profile.d/riscv32-unknown-elf.sh
-          # export PATH=$PATH:/opt/riscv32-unknown-elf
-          # export PICO_TOOLCHAIN_PATH=/opt/riscv32-unknown-elf
-          # source /etc/profile
-          # ls -lrta /opt/riscv32-unknown-elf
-          # riscv32-unknown-elf-c++ --version
-          # export _C_COMPILER=/opt/riscv32-unknown-elf/riscv32-unknown-elf-gcc
-          # export _CXX_COMPILER=/opt/riscv32-unknown-elf/riscv32-unknown-elf-g++
 
           #install picotool
           curl -Lo picotool-2.3.0-x86_64-lin.tar.gz "https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.3.0-0/picotool-2.3.0-x86_64-lin.tar.gz"
@@ -92,8 +76,8 @@ jobs:
           export PICO_BOARD=pico 
           export PICO_PLATFORM=rp2040
           export PICOTOOL_DIR=/opt/picotool
-          # export PICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin
-          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=$_C_COMPILER -DCMAKE_CXX_COMPILER:FILEPATH=$_CXX_COMPILER -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release
+          export PICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin
+          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/opt/gcc-arm-none-eabi/bin/arm-none-eabi-g++ -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release
           cmake --build .
           cd ..
           ls -lrt build/*.uf2
