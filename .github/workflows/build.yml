@@ -93,7 +93,7 @@ jobs:
           export PICO_PLATFORM=rp2040
           export PICOTOOL_DIR=/opt/picotool
           # export PICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin
-          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=$_C_COMPILER -DCMAKE_CXX_COMPILER:FILEPATH=_XX_COMPILER -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release
+          cmake .. -G "Ninja" -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=$_C_COMPILER -DCMAKE_CXX_COMPILER:FILEPATH=_CXX_COMPILER -DPICO_SDK_PATH=../../pico-sdk -DCMAKE_BUILD_TYPE=Release
           cmake --build .
           cd ..
           ls -lrt build/*.uf2
