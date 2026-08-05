@@ -25,15 +25,15 @@ concurrency:
 jobs:
   # Build job
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: pico_gps_teseo
 
       - name: Checkout pico-sdk/develop
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: raspberrypi/pico-sdk
           ref: develop
@@ -50,14 +50,9 @@ jobs:
           sudo apt-get install cmake
           sudo add-apt-repository universe
           sudo apt update
-          sudo apt install gcc-14
-          gcc --version
-          whereis gcc
-          whereis gcc-14
-          ls -la /usr/bin | grep g++
-
-          # install gcc cross-compile for ARM v 15.2.1
-          curl -Lo gcc-arm-none-eabi.tar.xz "https://developer.arm.com/-/media/Files/downloads/gnu/15.2.rel1/binrel/arm-gnu-toolchain-15.2.rel1-x86_64-arm-none-eabi.tar.xz"
+          
+          # install gcc cross-compile for ARM v 15.3
+          curl -Lo gcc-arm-none-eabi.tar.xz "https://gitlab.arm.com/tooling/gnu-toolchains-for-arm/-/package_files/13789/download"
           sudo mkdir /opt/gcc-arm-none-eabi
           sudo tar xf gcc-arm-none-eabi.tar.xz --strip-components=1 -C /opt/gcc-arm-none-eabi
           echo 'export PATH=$PATH:/opt/gcc-arm-none-eabi/bin' | sudo tee -a /etc/profile.d/gcc-arm-none-eabi.sh
@@ -65,15 +60,14 @@ jobs:
           export PICO_TOOLCHAIN_PATH=/opt/gcc-arm-none-eabi/bin
           source /etc/profile
           ls -lrta /opt/gcc-arm-none-eabi/bin
-          arm-none-eabi-c++ --version       
-          
-          # sudo apt install gcc-arm-none-eabi
+          arm-none-eabi-c++ --version
 
-          #install picotool
-          curl -Lo picotool-2.2.0-a4-x86_64-lin.tar.gz "https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.2.0-3/picotool-2.2.0-a4-x86_64-lin.tar.gz"
+          curl -Lo picotool-2.3.0-x86_64-lin.tar.gz "https://github.com/raspberrypi/pico-sdk-tools/releases/download/v2.3.0-0/picotool-2.3.0-x86_64-lin.tar.gz"
           sudo mkdir /opt/picotool
-          sudo tar -xvzf picotool-2.2.0-a4-x86_64-lin.tar.gz --strip-components=1 -C /opt/picotool
+          sudo tar -xvzf picotool-2.3.0-x86_64-lin.tar.gz --strip-components=1 -C /opt/picotool
           sudo chmod +x /opt/picotool/picotool
+          ls -lrta /opt/picotool
+          ls -lrta /opt/picotool/picotool
           echo 'export PATH=$PATH:/opt/picotool' | sudo tee -a /etc/profile.d/picotool.sh
           export PATH=$PATH:/opt/picotool
           source /etc/profile
