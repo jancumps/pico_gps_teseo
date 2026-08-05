@@ -1,16 +1,61 @@
 cmake_minimum_required(VERSION 3.28)
 
-set(PICO_DEOPTIMIZED_DEBUG 1)
-
-# Pull in SDK (must be before project)
-include(pico_sdk_import.cmake)
-# set(PICO_BOARD seeed_xiao_rp2040)
-
-project(pico_gps_teseo C CXX ASM)
-
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 26)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules-ts")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules-ts -fcommon -fno-rtti -fno-exceptions -fPIC")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Oplossing: Verwijder de vlag -flto uit uw compiler- en linkerinstellingen (zowel CFLAGS als LDFLAGS).
+string(REPLACE "-flto" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+string(REPLACE "-flto" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+string(REPLACE "-flto" "" CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
+
+# Check if the targeted architecture is RISC-V
+if(PICO_RISCV)
+    message(STATUS "Raspberry Pi Pico is compiling in RISC-V mode!")
+else()
+    message(STATUS "Raspberry Pi Pico is compiling in ARM mode")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=cortex-m0plus -mthumb")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mcpu=cortex-m0plus -mthumb")
+    set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -mcpu=cortex-m0plus -mthumb")
+endif()
+
+
+set(PICO_DEOPTIMIZED_DEBUG 1)
+
+# path to PICO utilities (if needed)
+if (NOT DEFINED ENV{PIOASM_DIR})
+        message("PIOASM: set PIOASM_DIR env variable if you use PIO")
+else()
+        message("PIOASM: PIOASM_DIR env variable is set to '$ENV{PIOASM_DIR}'")
+        set(pioasm_DIR $ENV{PIOASM_DIR})
+endif()
+if (NOT DEFINED ENV{PICOTOOL_DIR})
+        message("PICOTOOL: set PICOTOOL_DIR env variable if you create uf2 output with pico_add_extra_outputs()")
+else()
+        message("PICOTOOL: PICOTOOL_DIR env variable is set to '$ENV{PICOTOOL_DIR}'")
+        set(picotool_DIR $ENV{PICOTOOL_DIR})
+endif()
+
+if (DEFINED ENV{PICO_PLATFORM})
+        message("PICO_PLATFORM: PICO_PLATFORM env variable is set to '$ENV{PICO_PLATFORM}'")
+        set(PICO_PLATFORM $ENV{PICO_PLATFORM} CACHE STRING "Pico Platform")
+else()
+        message("PICO_PLATFORM: PICO_PLATFORM env variable is not set. Using default")
+endif()
+
+if (DEFINED ENV{PICO_BOARD})
+        message("PICO_BOARD: PICO_BOARD env variable is set to '$ENV{PICO_BOARD}'")
+        set(PICO_BOARD $ENV{PICO_BOARD} CACHE STRING "Board type")
+else()
+        message("PICO_BOARD: PICO_BOARD env variable is not set. Using default")
+endif()
+
+# Pull in Raspberry Pi Pico SDK (must be before project)
+include(pico_sdk_import.cmake)
+
+project(pico_gps_teseo C CXX ASM)
 
 pico_sdk_init()
 
@@ -25,14 +70,14 @@ FetchContent_MakeAvailable(callbackmanager)
 
 FetchContent_Declare(gps_teseo_lib
   GIT_REPOSITORY "https://github.com/jancumps/gps_teseo_lib.git"
-  GIT_TAG "fd37710"
+  GIT_TAG "63dbcee"
   SOURCE_SUBDIR =
 )
 FetchContent_MakeAvailable(gps_teseo_lib)
 
 FetchContent_Declare(gps_nmea_lib
   GIT_REPOSITORY "https://github.com/jancumps/gps_nmea_lib.git"
-  GIT_TAG "8e8dc74"
+  GIT_TAG "0933607"
   SOURCE_SUBDIR =
 )
 FetchContent_MakeAvailable(gps_nmea_lib)
@@ -131,3 +176,4 @@ __build_firmware("with_nmea_parse" "i2c")
 __build_firmware("nmea_with_data_processing" "uart")
 
 __build_firmware("nmea_with_data_processing" "i2c")
+
