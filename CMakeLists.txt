@@ -6,20 +6,22 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules-ts -fcommon -fno-rtti -fno-exceptions -fPIC")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Oplossing: Verwijder de vlag -flto uit uw compiler- en linkerinstellingen (zowel CFLAGS als LDFLAGS).
-string(REPLACE "-flto" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-string(REPLACE "-flto" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-string(REPLACE "-flto" "" CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
-
-# Check if the targeted architecture is RISC-V
+# Check if the targeted architecture is RISC-V or ARM
+# Pico SDK needs dedicated settings to avoid Linker issues in GCC 15.x
 if(PICO_RISCV)
     message(STATUS "Raspberry Pi Pico is compiling in RISC-V mode!")
 else()
     message(STATUS "Raspberry Pi Pico is compiling in ARM mode")
+    # Oplossing: Verwijder de vlag -flto uit uw compiler- en linkerinstellingen (zowel CFLAGS als LDFLAGS).
+    string(REPLACE "-flto" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+    string(REPLACE "-flto" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    string(REPLACE "-flto" "" CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
+
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=cortex-m0plus -mthumb")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mcpu=cortex-m0plus -mthumb")
     set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -mcpu=cortex-m0plus -mthumb")
 endif()
+
 
 
 set(PICO_DEOPTIMIZED_DEBUG 1)
