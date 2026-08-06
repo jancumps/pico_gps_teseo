@@ -37,4 +37,5 @@ example:
 Raspberry Pico specific code sits in the port/pico folder.  
 Latest development binaries are available on the [nightly release](https://github.com/jancumps/pico_gps_teseo/releases/tag/nightly_development).
 
-Requires a toolchain that supports C++ modules. Tested with CMake 3.28, Ninja 1.11 and GCC 14.2.1
+Requires a toolchain that supports C++ modules. Tested with CMake 3.28, Ninja 1.13 and GCC 15.1.  
+Tested on RP2040 and RP2350 (ARM and RISC-V)
